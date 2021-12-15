@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://d3js.org/d3.v7.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <style type="text/css">
+        svg {
+            background-color: whitesmoke;
+        }
+
+        h1 {
+            color: rgb(115, 115, 115);
+            font-size: 18px;
+            font-family: sans-serif;
+            font-weight: bold;
+            margin: 0;
+            padding-bottom: 10px;
+
+        }
+
+        #container {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+        }
+
+        #Belgium {
+            fill: rgba(124, 24, 24, 0.808);
+            cursor: pointer;
+        }
+
+        path:hover {
+            fill: rgba(0, 0, 0, 0.808);
+            cursor: pointer;
+        }
+
+        #arrowhead {
+            fill: #1500d3;
+            stroke: none;
+        }
+
+        #arrowhead2 {
+            fill: #d30000;
+            stroke: none;
+        }
+
+        #border {
+            fill: #ffffff;
+            stroke: none;
+        }
+
+        #route {
+            fill: #5b5e8541;
+            stroke: none;
+        }
+
+        .migratoryroute {
+            fill: #ff00aa00;
+            stroke: #000000;
+        }
+    </style>
+</head>
+
+<body>
+    <svg id="main">
+        <!-- TODO: can this be removed? -->
+        <path id="route" d="" />
+    </svg>
+
+    <div id="container">
+        <h1>World map centered on European countries</h1>
+
+    </div>
+    <script>
+        // set up the svg element to draw in using D3
+        let width = 2000,
+            height = 1000
+
+        let svg1 = d3.select("#main")
+            .attr("width", width)
+            .attr("height", height)
+
+
+        // A projection tells D3 how to orient the GeoJSON features
+        let europeProjection = d3.geoMercator()
+            .center([13, 52])
+            .scale([width / 4])
+            .translate([width / 2, height / 2])
+
+        // The path generator uses the projection to convert the GeoJSON
+        // geometry to a set of coordinates that D3 can understand
+        let pathGenerator = d3.geoPath().projection(europeProjection)
+
+        // geoJsonUrl = "https://gist.githubusercontent.com/spiker830/3eab0cb407031bf9f2286f98b9d0558a/raw/7edae936285e77be675366550e20f9166bed0ed5/europe_features.json"
+        let geoJsonUrl1 = "custom.geo (1).json"
+        let geoJsonUrl = "map.geojson"
+
+
+        d3.json(geoJsonUrl1).then(geojson => {
+            // Tell D3 to render a path for each GeoJSON feature
+            svg1.selectAll("path")
+                .data(geojson.features)
+                .enter()
+                .append("path")
+                .attr("xlink:href", "#border")
+                .attr("d", pathGenerator) // This is where the magic happens
+                .attr("stroke", "white") // Color of the lines themselves
+                .attr("fill", "grey") // Color uses to fill in the lines
+                .attr("id", function (d) { return d.properties.name; })
+                .append("svg:title").text(function (d) { return d.properties.name; })
+        })
+
+        d3.json(geoJsonUrl).then(geojson => {
+            // Tell D3 to render a path for each GeoJSON feature
+            svg1.selectAll("#main")
+                .data(geojson.features)
+                .enter()
+                .append("path")
+                .attr("href", "#migratoryroute")
+                .attr("class", "migratoryroute")
+                .attr("d", pathGenerator) // This is where the magic happens
+                .attr("id", function (d) { return d.properties.route_name; })
+
+
+            // trajectory1
+            trajectory1 = document.querySelector("#Black_Sea")
+            totalLength1 = trajectory1.getTotalLength()
+            group1 = totalLength1 / 20
+
+            arrowheads1 = d3.select("#main").selectAll("use")
+                .data(d3.range(20).map(function (d) { return d * group1 + 50; }))
+                .enter()
+                .append("use")
+                .attr("href", "#arrowhead")
+                .attr("route", "Black_Sea");
+
+            trajectory1.style.strokeDasharray = "50," + (group1 - 50);
+
+            // trajectory2
+            trajectory2 = document.querySelector("#Syrian_North_African")
+            totalLength2 = trajectory2.getTotalLength()
+            group2 = totalLength2 / 20
+
+            arrowheads2 = svg1.select("#main").selectAll("use")
+                .data(d3.range(20).map(function (d) { return d * group2 + 50; }))
+                .enter()
+                .append("use")
+                .attr("href", "#arrowhead")
+                .attr("route", "Syrian_North_African")
+                .append("use")
+
+
+            trajectory2.style.strokeDasharray = "50," + (group2 - 50);
+
+            // start animation
+            requestAnimationFrame(update);
+
+        })
+
+        svg1.append("defs")
+            .append("path")
+            .attr("id", "arrowhead")
+            .attr("d", "M7,0 L-7,-5 L-7,5 Z")
+
+        var start;
+
+        var trajectory1,
+            arrowheads1,
+            totalLength1,
+            group1;
+
+        var trajectory2,
+            arrowheads2,
+            totalLength2,
+            group2;
+
+
+        function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t) {
+            var offset = -group_x * ((t - start) % 900) / 900;
+
+            trajectory_x.style.strokeDashoffset = offset;
+
+
+            arrowheads_x.attr("transform", function (d) {
+
+                var l = d - offset;
+
+                if (l < 0) {
+                    l = totalLength_x + l;
+                } else if (l > totalLength_x) {
+                    l -= totalLength_x;
+                }
+
+                var p = pointAtLength(l, trajectory_x);
+                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x) + ")";
+            });
+        }
+
+        function update(t) {
+            if (!start) {
+                start = t;
+            }
+            // update_route function between these lines
+            update_route(arrowheads1, trajectory1, group1, totalLength1, start, t)
+            update_route(arrowheads2, trajectory2, group2, totalLength2, start, t)
+            // update_route function between these lines
+
+            requestAnimationFrame(update);
+        }
+
+        function pointAtLength(l, trajectory_x) {
+
+            var xy = trajectory_x.getPointAtLength(l);
+            return [xy.x, xy.y];
+
+        }
+
+        // Approximate tangent
+        function angleAtLength(l, trajectory_x) {
+
+            var a = pointAtLength(Math.max(l - 0.01, 0), trajectory_x), // this could be slightly negative
+                b = pointAtLength(l + 0.01, trajectory_x); // browsers cap at total length
+
+            return Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+
+        }
+
+
+    </script>
+</body>

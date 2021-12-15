@@ -43,6 +43,11 @@
             stroke: none;
         }
 
+        .arrowelement {
+            fill: #1500d3;
+            stroke: none;
+        }
+
         #arrowhead2 {
             fill: #d30000;
             stroke: none;
@@ -126,17 +131,28 @@
                 .attr("id", function (d) { return d.properties.route_name; })
 
 
+
+            function addArrows(data, ref) {
+                return d3.select("#main").append("div").attr("class","arrowelement").selectAll("use")
+                    .data(data).enter()
+                    .append("use")
+                    .attr("href", "#arrowhead")
+                    .attr("route", ref);
+            }
+
             // trajectory1
             trajectory1 = document.querySelector("#Black_Sea")
             totalLength1 = trajectory1.getTotalLength()
             group1 = totalLength1 / 20
 
-            arrowheads1 = d3.select("#main").selectAll("use")
-                .data(d3.range(20).map(function (d) { return d * group1 + 50; }))
-                .enter()
-                .append("use")
-                .attr("href", "#arrowhead")
-                .attr("route", "Black_Sea");
+            arrowheads1 = addArrows(d3.range(20).map(function (d) { return d * group1 + 50; }), "Black_Sea")
+
+            // arrowheads1 = d3.select("#main").selectAll("use")
+            //     .data(d3.range(20).map(function (d) { return d * group1 + 50; }))
+            //     .enter()
+            //     .append("use")
+            //     .attr("href", "#arrowhead")
+            //     .attr("route", "Black_Sea");
 
             trajectory1.style.strokeDasharray = "50," + (group1 - 50);
 
@@ -145,14 +161,13 @@
             totalLength2 = trajectory2.getTotalLength()
             group2 = totalLength2 / 20
 
-            arrowheads2 = svg1.select("#main").selectAll("use")
-                .data(d3.range(20).map(function (d) { return d * group2 + 50; }))
-                .enter()
-                .append("use")
-                .attr("href", "#arrowhead")
-                .attr("route", "Syrian_North_African")
-                .append("use")
+            arrowheads2 = addArrows(d3.range(50).map(function (d) { return d * group2 + 50; }), "Syrian_North_African")
 
+            // arrowheads2 = d3.select("#main").selectAll("use")
+            //     .data(d3.range(20).map(function (d) { return d * group2 + 50; }))
+            //     .append("use")
+            //     .attr("href", "#arrowhead")
+            //     .attr("route", "Syrian_North_African")
 
             trajectory2.style.strokeDasharray = "50," + (group2 - 50);
 

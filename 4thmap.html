@@ -46,12 +46,7 @@
         .arrowelement {
             fill: #1500d3;
             stroke: none;
-        }
-
-        #arrowhead2 {
-            fill: #d30000;
-            stroke: none;
-        }
+        } 
 
         #border {
             fill: #ffffff;
@@ -65,7 +60,21 @@
 
         .migratoryroute {
             fill: #ff00aa00;
-            stroke: #000000;
+            stroke: #00000000;
+        }
+
+        use.Black_Sea {
+            fill: #fa2bb5;
+            stroke: #fa2bb5;
+        }
+
+        use.Syrian_North_African {
+            fill: #fae52b;
+            stroke: none;
+        }
+
+        use.Central_African_Routes {
+            fill: #2baefa;
         }
     </style>
 </head>
@@ -101,11 +110,11 @@
         let pathGenerator = d3.geoPath().projection(europeProjection)
 
         // geoJsonUrl = "https://gist.githubusercontent.com/spiker830/3eab0cb407031bf9f2286f98b9d0558a/raw/7edae936285e77be675366550e20f9166bed0ed5/europe_features.json"
-        let geoJsonUrl1 = "custom.geo (1).json"
-        let geoJsonUrl = "map.geojson"
+        let geoJsonUrl_worldmap = "custom.geo (1).json"
+        let geoJsonUrl_migrantroutes = "map (5).geojson"
 
 
-        d3.json(geoJsonUrl1).then(geojson => {
+        d3.json(geoJsonUrl_worldmap).then(geojson => {
             // Tell D3 to render a path for each GeoJSON feature
             svg1.selectAll("path")
                 .data(geojson.features)
@@ -119,7 +128,7 @@
                 .append("svg:title").text(function (d) { return d.properties.name; })
         })
 
-        d3.json(geoJsonUrl).then(geojson => {
+        d3.json(geoJsonUrl_migrantroutes).then(geojson => {
             // Tell D3 to render a path for each GeoJSON feature
             svg1.selectAll("#main")
                 .data(geojson.features)
@@ -128,48 +137,65 @@
                 .attr("href", "#migratoryroute")
                 .attr("class", "migratoryroute")
                 .attr("d", pathGenerator) // This is where the magic happens
-                .attr("id", function (d) { return d.properties.route_name; })
-
+                .attr("route_name", function (d) { return d.properties.route_name; })
+                .attr("route_index", function (d) { return d.properties.route_index; })
+                .attr("id", function (d) { return d.properties.route_name + "_" + d.properties.route_index; })
 
 
             function addArrows(data, ref) {
-                return d3.select("#main").append("div").attr("class","arrowelement").selectAll("use")
+                return d3.select("#main").append("g").attr("class", "arrowelement").selectAll("use")
                     .data(data).enter()
                     .append("use")
                     .attr("href", "#arrowhead")
-                    .attr("route", ref);
+                    .attr("route_name", ref)
+                    .attr("class", ref);
             }
 
-            // trajectory1
-            trajectory1 = document.querySelector("#Black_Sea")
-            totalLength1 = trajectory1.getTotalLength()
-            group1 = totalLength1 / 20
+            if (!Array.prototype.last) {
+                Array.prototype.last = function () {
+                    return this[this.length - 1];
+                };
+            };
 
-            arrowheads1 = addArrows(d3.range(20).map(function (d) { return d * group1 + 50; }), "Black_Sea")
+            function createTrajectory(route_name, route_index) {
+                // routes with index -> route_id = route_name + "_" + route_index
+                route_id = "#" + route_name + "_" + route_index
+                trajectories.push(document.querySelector(route_id))
+                totalLengths.push(trajectories.last().getTotalLength())
+                groups.push(totalLengths.last() / 10)
+                arrowgroups.push(addArrows(d3.range(10).map(function (d) { return d * groups.last() + 50; }), route_name))
+                trajectories.last().style.strokeDasharray = "50," + (groups.last() - 50);
 
-            // arrowheads1 = d3.select("#main").selectAll("use")
-            //     .data(d3.range(20).map(function (d) { return d * group1 + 50; }))
-            //     .enter()
-            //     .append("use")
-            //     .attr("href", "#arrowhead")
-            //     .attr("route", "Black_Sea");
+            }
+            // // trajectory1
+            createTrajectory("Black_Sea", "0")
+            createTrajectory("Syrian_North_African", "0")
+            createTrajectory("Central_African_Routes", "0")
+            createTrajectory("Central_African_Routes", "1")
+            createTrajectory("Central_African_Routes", "2")
+            // createTrajectory("Central_African_Routes", "3")
+            createTrajectory("Central_African_Routes", "4")
+            createTrajectory("Central_African_Routes", "5")
+            createTrajectory("Central_African_Routes", "6")
+            createTrajectory("Central_African_Routes", "7")
+            createTrajectory("Central_African_Routes", "8")
+            createTrajectory("Central_African_Routes", "9")
+            createTrajectory("Central_African_Routes", "10")
+            createTrajectory("Central_African_Routes", "11")
+            createTrajectory("testroute", "0")
 
-            trajectory1.style.strokeDasharray = "50," + (group1 - 50);
+            // trajectories.push(document.querySelector("path[route_name=Black_Sea]"))
+            // totalLengths.push(trajectories.last().getTotalLength())
+            // groups.push(totalLengths[0] / 20)
+            // arrowgroups.push(addArrows(d3.range(20).map(function (d) { return d * groups[0] + 50; }), "Black_Sea"))
+            // trajectories[0].style.strokeDasharray = "50," + (groups[0] - 50);
 
-            // trajectory2
-            trajectory2 = document.querySelector("#Syrian_North_African")
-            totalLength2 = trajectory2.getTotalLength()
-            group2 = totalLength2 / 20
-
-            arrowheads2 = addArrows(d3.range(50).map(function (d) { return d * group2 + 50; }), "Syrian_North_African")
-
-            // arrowheads2 = d3.select("#main").selectAll("use")
-            //     .data(d3.range(20).map(function (d) { return d * group2 + 50; }))
-            //     .append("use")
-            //     .attr("href", "#arrowhead")
-            //     .attr("route", "Syrian_North_African")
-
-            trajectory2.style.strokeDasharray = "50," + (group2 - 50);
+            // // trajectory 2 
+            // trajectories.push(document.querySelector("path[route_name=Syrian_North_African]"))
+            // totalLengths.push(trajectories[1].getTotalLength())
+            // groups.push(totalLengths[1] / 20)
+            // arrowgroups.push(addArrows(d3.range(20).map(function (d) { return d * groups[1] + 50; }), "Syrian_North_African"))
+            // trajectories[1].style.strokeDasharray = "50," + (groups[1] - 50);
 
             // start animation
             requestAnimationFrame(update);
@@ -181,17 +207,29 @@
             .attr("id", "arrowhead")
             .attr("d", "M7,0 L-7,-5 L-7,5 Z")
 
+        // svg1.append("defs")
+        //     .append("marker")
+        //     .attr("id", "arrowhead")
+        //     .attr("markerWidth", "10")
+        //     .attr("markerHeight", "7")
+        //     .attr("refX","5")
+        //     .attr("refY", "5")
+        //     .attr("orient","auto")
+        //     .append("path")
+        //     .attr("d", "M 0 0 L 10 5 L 0 10 z")
+
+
+        // svg1.append("defs")
+        //     .append("path")
+        //     .attr("id", "arrowhead")
+        //     .attr("d", "M16.7, 178 c87.6 - 46.9, 162.9 - 185.4, 227 - 136.4C307.2, 90.1, 195, 158.5, 111, 108.9C71, 85.2, 92.2, 30.7, 126, 7")
+            
         var start;
 
-        var trajectory1,
-            arrowheads1,
-            totalLength1,
-            group1;
-
-        var trajectory2,
-            arrowheads2,
-            totalLength2,
-            group2;
+        const trajectories = [],
+            arrowgroups = [],
+            totalLengths = [],
+            groups = []
 
 
         function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t) {
@@ -220,8 +258,10 @@
                 start = t;
             }
             // update_route function between these lines
-            update_route(arrowheads1, trajectory1, group1, totalLength1, start, t)
-            update_route(arrowheads2, trajectory2, group2, totalLength2, start, t)
+            trajectories.forEach(updatefunction);
+            function updatefunction(value, index, array) {
+                update_route(arrowgroups[index], trajectories[index], groups[index], totalLengths[index], start, t)
+            }
             // update_route function between these lines
 
             requestAnimationFrame(update);

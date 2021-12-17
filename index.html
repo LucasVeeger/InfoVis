@@ -102,11 +102,11 @@
 </head>
 
 <body>
-    <div class="ml-64 fixed p-8">
-        <div class=" text-2xl text-white "> The European Refugee Crisis: <br> </div>
-        <div class=" text-2xl text-white "> A migratory visualization<br> <br></div>
+    <div class="ml-64 fixed p-6">
+        <div class=" text-3xl text-white"> The European Refugee Crisis: </div>
+        <div class=" text-2xl text-white mt-1 font-bold"> A migratory visualization</div>
 
-        <div class="text-xl text-white w-7/12"> As reported by the UN Refugee Agency, the UNHCR, over 12 million people of concern (refugees, asylum-seekers and/or migrant) are staying in Europe by the 31st of December 2020. <br> 
+        <div class="text-md text-white w-9/12 lg:w-8/12 mt-2"> As reported by the UN Refugee Agency, the UNHCR, over 12 million people of concern (refugees, asylum-seekers and/or migrant) are staying in Europe by the 31st of December 2020. <br> 
         Different organisations collect extensive amounts of data covering the migrational events around these people. <br> <br> 
         On the map charted below you can observe the magnitudes of the migration flows into Europe accross different routes. <br> Frontex, the European border management agency, collects data on Illegal Border Crossings (IBCs) among different routes taken accross African Mediterrenean, Adriatic and Balkan regions. Using your mouse wheel you can scroll through time.
         The graph below shows the amount of migrant that applied for asylum for most applying nationalities.    
@@ -117,7 +117,7 @@
     <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="bottom-80 h-1/2 w-2/5 ml-64 fixed z-10">
+    <div id="countriesChartHolder" class="bottom-56 h-1/2 w-2/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
         <div class="flex text-white flex-row flex-wrap">
             <div class="flex">
@@ -168,7 +168,7 @@
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-40 fixed">
+    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-24 fixed">
         <p class="p-3 ">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
                 height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
@@ -784,9 +784,10 @@
 
         // data paths
         let geoJsonUrl_worldmap = "https://raw.githubusercontent.com/quintene/data_vis_data/main/map_geo_data.json"
-        let geoJsonUrl_migrantroutes = "migration_routes(2).geojson"
+        let geoJsonUrl_migrantroutes = "https://raw.githubusercontent.com/quintene/data_vis_data/main/migration_routes.geojson"
         let path_IBCs_data = "https://raw.githubusercontent.com/quintene/data_vis_data/main/monthly_detections_of_IBCs.json"
-        let path_route_mapping = "route_mapping.json"
+        let path_route_mapping = "https://raw.githubusercontent.com/quintene/data_vis_data/main/route_mapping.json"
+
 
         // variables for animation
         var start;

@@ -86,7 +86,7 @@
     <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="h-1/5 w-1/5 ml-64 fixed z-10">
+    <div id="countriesChartHolder" class="top-10 h-2/5 w-2/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
     </div>
 
@@ -153,7 +153,7 @@
                 .style("fill", "white")
                 .attr("r", circleR)
                 .attr("cx", barX + (barW / 2))
-                .attr("cy", 35 + (barHeight / 13) * i);
+                .attr("cy", (barHeight / 13) * i - textOffset - 5 );
 
             let text = startDate.format('MMMM YYYY');
             if (startDate.month() != 0) {
@@ -165,7 +165,7 @@
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset)
                 .attr("font-size", textSize)
-                .attr("color", "white")
+                .attr("fill", "white")
                 .text(text);
             startDate.add(1, 'months');
         }
@@ -537,7 +537,7 @@
                         .attr("x", barX + barW + circleR + 10)
                         .attr("y", (barHeight + (barHeight / 13) * i) - textOffset)
                         .attr("font-size", textSize)
-                        .attr("color", "white")
+                        .attr("fill", "white")
                         .attr("class", "activeDate")
                         .text(text);
 
@@ -596,6 +596,7 @@
                         .attr("x", barX + barW + circleR + 10)
                         .attr("y", (-1 * (barHeight / 13) * i) - textOffset)
                         .attr("font-size", textSize)
+                        .attr("fill","white")
                         .attr("class", "activeDate")
                         .text(text);
                 }

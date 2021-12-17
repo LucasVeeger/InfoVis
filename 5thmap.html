@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<head>
+    <script src="https://d3js.org/d3.v7.js" charset="utf-8"></script>
+    <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
+    <style type="text/css">
+        svg {
+            background-color: whitesmoke;
+        }
+
+        h1 {
+            color: rgb(115, 115, 115);
+            font-size: 18px;
+            font-family: sans-serif;
+            font-weight: bold;
+            margin: 0;
+            padding-bottom: 10px;
+
+        }
+
+        #container {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+        }
+
+        #Belgium {
+            fill: rgba(124, 24, 24, 0.808);
+            cursor: pointer;
+        }
+
+        path:hover {
+            fill: rgba(0, 0, 0, 0.808);
+            cursor: pointer;
+        }
+
+
+        #arrowhead {
+            fill: #000000;
+            stroke: none;
+        }
+
+        /* /* .arrowelement {
+            fill: #1500d3;
+            stroke: none;
+        } */
+
+        #border {
+            fill: #ffffff;
+            stroke: none;
+        }
+
+        #route {
+            fill: #5b5e8541;
+            stroke: none;
+        }
+
+        .migratoryroute {
+            fill: #ff00aa00;
+            stroke: #ff000036;
+        }
+
+        /* use.Black_Sea {
+            fill: #fa2bb5;
+            stroke: #fa2bb5;
+        }
+
+        use.Syrian_North_African {
+            fill: #fae52b;
+            stroke: none;
+        }
+
+        use.Central_African_Routes {
+            fill: #2baefa;
+        } */
+    </style>
+</head>
+
+<body>
+    <!-- Declare main svg -->
+    <svg id="main"></svg>
+    <script>
+        // assign frame
+        let width = 2000,
+            height = 1000
+        let svg1 = d3.select("#main")
+            .attr("width", width)
+            .attr("height", height)
+
+        // create arrow structure for animation
+        svg1.append("defs")
+            .append("symbol")
+            .attr("id", "arrowheadsymbol")
+            .attr("viewbox", "0 0 50 50")
+            .attr("refX", "10")
+            .attr("refY", "10")
+            .attr("preserveAspectRatio", "xMidYMid")
+            .attr("x", "0")
+            .attr("y", "-15")
+            .append("polygon")
+            .attr("id", "arrowhead")
+            .attr("points", "23.4,18.8 30,15 23.4,11.2 16.7,7.3 16.7,13 0,13 0,17 16.7,17 16.7,22.7")
+
+
+        // A projection tells D3 how to orient the GeoJSON features
+        let europeProjection = d3.geoMercator()
+            .center([13, 52])
+            .scale([width / 4])
+            .translate([width / 2, height / 2])
+
+        // The path generator uses the projection to convert the GeoJSON
+        // geometry to a set of coordinates that D3 can understand
+        let pathGenerator = d3.geoPath().projection(europeProjection)
+
+        // data paths
+        let geoJsonUrl_worldmap = "custom.geo (2).json"
+        let geoJsonUrl_migrantroutes = "migration_routes(2).geojson"
+        let path_IBCs_data = "monthly_detections_of_IBCs.json"
+        let path_route_mapping = "route_mapping.json"
+
+        // variables for animation
+        var start;
+        let data_IBCs;
+        const trajectories = [],
+            arrowgroups = [],
+            totalLengths = [],
+            groups = [],
+            scalingfactors = {}
+
+
+        // Load world map
+        d3.json(geoJsonUrl_worldmap).then(geojson => {
+            // Tell D3 to render a path for each GeoJSON feature
+            svg1.selectAll("path")
+                .data(geojson.features)
+                .enter()
+                .append("path")
+                .attr("xlink:href", "#border")
+                .attr("d", pathGenerator) // This is where the magic happens
+                .attr("stroke", "white") // Color of the lines themselves
+                .attr("fill", "grey") // Color uses to fill in the lines
+                .attr("id", function (d) { return d.properties.name; })
+                .append("svg:title").text(function (d) { return d.properties.name; })
+
+            // Load migrant routes and initialize all trajectories
+            d3.json(geoJsonUrl_migrantroutes).then(geojson => {
+                // Tell D3 to render a path for each GeoJSON feature
+                svg1.selectAll("#main")
+                    .data(geojson.features)
+                    .enter()
+                    .append("path")
+                    .attr("href", "#migratoryroute")
+                    .attr("class", "migratoryroute")
+                    .attr("d", pathGenerator)
+                    .attr("route_name", function (d) { return d.properties.route_name; })
+                    .attr("route_index", function (d) { return d.properties.route_index; })
+                    .attr("id", function (d) { return d.properties.route_name + "_" + d.properties.route_index; })
+
+                // create all trajectories
+                createTrajectory("Black_Sea", "0")
+                // createTrajectory("Central_African_Routes", "0") DOESN'T EXIST ANYMORE
+                // createTrajectory("Central_African_Routes", "1") DOESN'T EXIST ANYMORE
+                createTrajectory("Central_African_Routes", "2")
+                // createTrajectory("Central_African_Routes", "3") DOESN'T EXIST ANYMORE
+                createTrajectory("Central_African_Routes", "4")
+                createTrajectory("Central_African_Routes", "5")
+                createTrajectory("Central_African_Routes", "6")
+                createTrajectory("Central_African_Routes", "7")
+                createTrajectory("Central_African_Routes", "8")
+                createTrajectory("Central_African_Routes", "9")
+                createTrajectory("Central_African_Routes", "10")
+                // createTrajectory("Central_African_Routes", "11") DOESN'T EXIST ANYMORE
+                createTrajectory("Syria_Africa", "0")
+                createTrajectory("West_African", "0")
+                createTrajectory("West_African", "1")
+                createTrajectory("Syria_Africa", "1")
+                createTrajectory("Spain", "0")
+                createTrajectory("Spain", "1")
+                createTrajectory("Tuni_Medi", "0")
+                createTrajectory("ME_Africa", "0")
+                createTrajectory("East_Africa", "0")
+                createTrajectory("East_Africa", "1")
+                createTrajectory("Turkey", "0")
+                createTrajectory("Turkey", "1")
+                createTrajectory("Egypt_Medi", "0")
+                createTrajectory("Egypt_Medi", "1")
+                createTrajectory("East_Asia", "0")
+                createTrajectory("East_Asia", "1")
+                createTrajectory("Russia", "0")
+                createTrajectory("Easter_Europe", "0")
+                createTrajectory("Norway", "0")
+                createTrajectory("Norway", "1")
+                createTrajectory("Greece_Italy", "0")
+                createTrajectory("Libya_Medi", "0")
+                createTrajectory("Turkey_Medi", "0")
+                createTrajectory("Italy", "0")
+
+
+                // read IBC (Illegal Border Crossing) and route_mapping sdata
+                readTextFile(path_IBCs_data, function (text) {
+                    data_IBCs = JSON.parse(text)
+                    console.log(path_IBCs_data + ": completed JSON parsing...")
+                    readTextFile(path_route_mapping, function (text) {
+                        data_route_mapping = JSON.parse(text)
+                        console.log((path_route_mapping + ": completed JSON parsing..."))
+                        // START ANIMATION
+                        requestAnimationFrame(update);
+                    })
+                })
+            })
+        })
+
+        // function that creates <use> elements for arrows
+        function addArrows(data, ref) {
+            return d3.select("#main").append("g").attr("class", "arrowelement").selectAll("use")
+                .data(data).enter()
+                .append("use")
+                .attr("href", "#arrowheadsymbol")
+                .attr("route_name", ref)
+                .attr("class", ref)
+        }
+
+        // function that builds trajectories and related variables
+        function createTrajectory(route_name, route_index) {
+            // routes with index -> route_id = route_name + "_" + route_index
+            route_id = "#" + route_name + "_" + route_index
+            trajectories.push(document.querySelector(route_id))
+            totalLengths.push(trajectories.last().getTotalLength())
+            groups.push(totalLengths.last() / 3)
+            arrowgroups.push(addArrows(d3.range(3).map(function (d) { return d * groups.last() + 50; }), route_name))
+        }
+
+
+        function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t, scalingfactor) {
+            var offset = -group_x * ((t - start) % 900) / 900;
+
+            arrowheads_x.attr("transform", function (d) {
+
+                var l = d - offset;
+
+                if (l < 0) {
+                    l = totalLength_x + l;
+                } else if (l > totalLength_x) {
+                    l -= totalLength_x;
+                }
+
+                var p = pointAtLength(l, trajectory_x, scalingfactor);
+                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
+            });
+        }
+
+        function readTextFile(file, callback) {
+            var rawFile = new XMLHttpRequest();
+            rawFile.overrideMimeType("application/json");
+            rawFile.open("GET", file, true);
+            rawFile.onreadystatechange = function () {
+                if (rawFile.readyState === 4 && rawFile.status == "200") {
+                    callback(rawFile.responseText);
+                }
+            }
+            rawFile.send(null);
+            // //usage:
+            // readTextFile("/Users/Documents/workspace/test.json", function (text) {
+            //     var data = JSON.parse(text);
+            //     console.log(data);
+            // });
+        }
+
+
+        function fetch_scalingfactor(year, trajectory_x) {
+            // calculate the scale size of the arrows, corresponding to the amount of IBCs (illegal border crossings) 
+            // for a given route and a given year for all origin countries combined. Saves the scalingfactor for later saving.
+            if (Object.keys(scalingfactors).includes(year)) {
+                if (Object.keys(scalingfactors[year]).includes(trajectory_x.getAttribute("id"))) {
+                    return scalingfactors[year][trajectory_x.getAttribute("id")]
+                }
+            } else {
+                scalingfactors[year] = {}
+            }
+
+            var sum_IBCs = 0
+            var scalingfactor;
+            // Using the following formula to dampen the variation in scaling factors m = ( ( n - 1 ) / d ) + 1 
+            var dampingfactor = 2;
+            data_IBCs.Detections_of_IBC.forEach(element => {
+                if (!Object.keys(data_route_mapping).includes(element.Route)) {
+                    return;
+                }
+                if (Object.keys(data_route_mapping[element.Route]).includes(trajectory_x.getAttribute("route_name"))) {
+                    // Factor to correct for trajectories that contribute less to actual migration Route (e.g. Turkey_Medi to Central Mediterrenean Route) 
+                    correctionfactor = data_route_mapping[element.Route][trajectory_x.getAttribute("route_name")]
+                    sum_IBCs += sum_monthly_IBCs(element, year) * correctionfactor
+                }
+            })
+            console.log("sum_IBCs route " + trajectory_x.getAttribute("route_name") + " = " + sum_IBCs);
+            if (sum_IBCs == 0) {
+                return scalingfactors[year][trajectory_x.getAttribute("id")] = 0
+            } else {
+                return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / 500000 - 1) / dampingfactor) + 1
+            }
+        }
+
+        function sum_monthly_IBCs(country_IBCs, year) {
+            // Calculate combined yearly IBCs for a single country. 
+            var sum_IBCs_country = 0;
+            Object.keys(country_IBCs).forEach(element => {
+                if (element.includes(year)) {
+                    sum_IBCs_country += parseInt(country_IBCs[element])
+                }
+            })
+            return sum_IBCs_country;
+        }
+
+        function update(t) {
+            if (!start) {
+                start = t;
+            }
+            // update_route function to update trajectories
+            trajectories.forEach(updatefunction);
+            function updatefunction(value, index, array) {
+                scalingfactor = fetch_scalingfactor("2015", trajectories[index])
+                update_route(arrowgroups[index], trajectories[index], groups[index], totalLengths[index], start, t, scalingfactor)
+            }
+
+
+            requestAnimationFrame(update);
+        }
+
+        function pointAtLength(l, trajectory_x, scalingfactor) {
+
+            var xy = trajectory_x.getPointAtLength(l);
+            return [xy.x - scalingfactor * 0, xy.y - scalingfactor * 0];
+
+        }
+
+        // Approximate tangent
+        function angleAtLength(l, trajectory_x, scalingfactor) {
+
+            var a = pointAtLength(Math.max(l - 0.01, 0), trajectory_x, scalingfactor), // this could be slightly negative
+                b = pointAtLength(l + 0.01, trajectory_x, scalingfactor); // browsers cap at total length
+
+            return Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI;
+
+        }
+        // last() function
+        if (!Array.prototype.last) {
+            Array.prototype.last = function () {
+                return this[this.length - 1];
+            };
+        };
+
+
+    </script>
+</body>

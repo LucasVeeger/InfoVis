@@ -1,74 +1,65 @@
 <!doctype html>
 <html>
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://momentjs.com/downloads/moment.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://momentjs.com/downloads/moment.min.js"></script>
 
-  <style type="text/css">
-    svg {
-        background-color: whitesmoke;
-    }
+    <style type="text/css">
+        svg {
+            background-color: whitesmoke;
+        }
 
-    h1 {
-        color: rgb(115, 115, 115);
-        font-size: 18px;
-        font-family: sans-serif;
-        font-weight: bold;
-        margin: 0;
-        padding-bottom: 10px;
+        h1 {
+            color: rgb(115, 115, 115);
+            font-size: 18px;
+            font-family: sans-serif;
+            font-weight: bold;
+            margin: 0;
+            padding-bottom: 10px;
 
-    }
+        }
 
-    #container {
-        width: 800px;
-        margin-left: auto;
-        margin-right: auto;
-        margin-top: 20px;
-        padding: 20px;
-        background-color: white;
-        box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
-    }
+        #container {
+            width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: white;
+            box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
+        }
 
-    #Belgium {
-        fill: rgba(124, 24, 24, 0.808);
-        cursor: pointer;
-    }
-
-    path:hover {
-        fill: rgba(0, 0, 0, 0.808);
-        cursor: pointer;
-    }
+        .country:hover {
+            fill: rgba(0, 0, 0, 0.603);
+            cursor: pointer;
+        }
 
 
-    #arrowhead {
-        fill: #000000;
-        stroke: none;
-    }
+        #arrowhead {
+            fill: #e20000;
+            stroke: none;
+        }
 
-    /* /* .arrowelement {
-        fill: #1500d3;
-        stroke: none;
-    } */
+        #border {
+            fill: #ffffff;
+            stroke: none;
+        }
 
-    #border {
-        fill: #ffffff;
-        stroke: none;
-    }
+        #route {
+            fill: #5b5e8541;
+            stroke: none;
+        }
 
-    #route {
-        fill: #5b5e8541;
-        stroke: none;
-    }
+        .migratoryroute {
+            fill: #ff00aa00;
+            stroke: #ff000036;
+        }
 
-    .migratoryroute {
-        fill: #ff00aa00;
-        stroke: #ff000036;
-    }
-
-    /* use.Black_Sea {
+        /* use.Black_Sea {
         fill: #fa2bb5;
         stroke: #fa2bb5;
     }
@@ -81,16 +72,17 @@
     use.Central_African_Routes {
         fill: #2baefa;
     } */
-</style>
+    </style>
 
 
 </head>
+
 <body>
 
     <div id="yearSliderHolder" class="h-screen w-64 fixed t-0 bg-gray-50">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="h-1/5 w-1/5 ml-64 bg-gray-100 fixed z-10"> 
+    <div id="countriesChartHolder" class="h-1/5 w-1/5 ml-64 bg-gray-100 fixed z-10">
         <svg id="countriesChart"></svg>
     </div>
 
@@ -98,560 +90,563 @@
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bg-gray-50 bottom-0 fixed"> 
-        <p class="p-3 "> 
-            <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20" height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-            <path d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
-          </svg> = <span id="deathCountSize"></span> </p>
+    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bg-gray-50 bottom-0 fixed">
+        <p class="p-3 ">
+            <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
+                height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
+                stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
+            </svg> = <span id="deathCountSize"></span>
+        </p>
         <svg id="deathsChart"></svg>
     </div>
 
-  <script>
+    <script>
 
-    window.addEventListener('wheel', this.handleScroll, false);
+        window.addEventListener('wheel', this.handleScroll, false);
 
-    var currentDate = moment("2009");
-
-
-    // YEAR SLIDER ******** 
-    var yearSliderParent = document.getElementById("yearSliderHolder");
-
-    // Select the svg area
-    var svg = d3.select("#yearSlider");
-    
-    // General settings
-    const barX = 20;
-    const barW = 2; 
-    const barHeight = yearSliderParent.clientHeight;
-    const textSize = 20;
-
-    const textOffset = 25;
+        var currentDate = moment("2009");
 
 
-    // Year on timeline settings 
-    const circleR = 6;
+        // YEAR SLIDER ******** 
+        var yearSliderParent = document.getElementById("yearSliderHolder");
 
-    //Setup draw area
-    svg
-    .attr("width",yearSliderParent.clientWidth )
-    .attr("height", yearSliderParent.clientHeight )
-    
-    // line
-    var line = svg.append('rect')
-    .attr('x', barX)
-    .attr('y', 0)
-    .attr('width', barW)
-    .attr('height', barHeight)
-    .attr('fill', '#69a3b2');
+        // Select the svg area
+        var svg = d3.select("#yearSlider");
 
-    var startDate = moment(currentDate);
+        // General settings
+        const barX = 20;
+        const barW = 2;
+        const barHeight = yearSliderParent.clientHeight;
+        const textSize = 20;
 
-    // We render inital 12 months
-    for (var i = 1; i <= 13; i++) {        
-        var year_circle = svg.append("circle")
-        .style("stroke", "gray")
-        .style("fill", "white")
-        .attr("r", circleR)
-        .attr("cx", barX + (barW/2))
-        .attr("cy", 35 + (barHeight /13) * i );
-
-        let text = startDate.format('MMMM YYYY');
-        if (startDate.month() != 0) {
-            text = startDate.format('MMMM')
-        } 
-
-        var year_text = svg.append("text")
-        .attr("id", "d"+startDate.format('YYYYMM'))
-        .attr("x",barX +barW + circleR + 10)
-        .attr("y", (barHeight /13) * i - textOffset )
-        .attr("font-size", textSize) 
-        .text(text);
-        startDate.add(1,'months');
-    }
+        const textOffset = 25;
 
 
+        // Year on timeline settings 
+        const circleR = 6;
 
-    // Render crosses ***********************
+        //Setup draw area
+        svg
+            .attr("width", yearSliderParent.clientWidth)
+            .attr("height", yearSliderParent.clientHeight)
 
-    var deaths = {
-   "2013": {
-      "dead": 636,
-      "missing": 0,
-      "total": 636
-   },
-   "2014": {
-      "dead": 770,
-      "missing": 2768,
-      "total": 3538
-   },
-   "2015": {
-      "dead": 1555,
-      "missing": 2216,
-      "total": 3771
-   },
-   "2016": {
-      "dead": 1485,
-      "missing": 3611,
-      "total": 5096
-   },
-   "2017": {
-      "dead": 795,
-      "missing": 2344,
-      "total": 3139
-   },
-   "2018": {
-      "dead": 670,
-      "missing": 1600,
-      "total": 2270
-   },
-   "2019": {
-      "dead": 272,
-      "missing": 1063,
-      "total": 1335
-   },
-   "2020": {
-      "dead": 562,
-      "missing": 839,
-      "total": 1401
-   },
-   "2021": {
-      "dead": 708,
-      "missing": 937,
-      "total": 1645
-   }
-}
+        // line
+        var line = svg.append('rect')
+            .attr('x', barX)
+            .attr('y', 0)
+            .attr('width', barW)
+            .attr('height', barHeight)
+            .attr('fill', '#69a3b2');
 
-    var deathsHolder = document.getElementById("deathsHolder");
+        var startDate = moment(currentDate);
 
+        // We render inital 12 months
+        for (var i = 1; i <= 13; i++) {
+            var year_circle = svg.append("circle")
+                .style("stroke", "gray")
+                .style("fill", "white")
+                .attr("r", circleR)
+                .attr("cx", barX + (barW / 2))
+                .attr("cy", 35 + (barHeight / 13) * i);
 
-/*
-    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cross" width="64" height="64" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-  <path d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
-</svg>
-*/
+            let text = startDate.format('MMMM YYYY');
+            if (startDate.month() != 0) {
+                text = startDate.format('MMMM')
+            }
 
-const deathChartsvg = d3.select("#deathsChart")
-        .attr("width", deathsHolder.clientWidth)
-        .attr("height", deathsHolder.clientHeight)
-
-
-    var xdeaths = 10;
-    var ydeaths= 10;
-
-    var deathSize = 400;
-
-    document.getElementById('deathCountSize').innerHTML = deathSize.toString() +"x";
-
-    for (var year in deaths) {
-        
-        for (i = 0; i <= deaths[year].total; i+= deathSize) {
-            d3.select("#deathsChart")
-            .append('path')            
-            .attr('d',"M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z")
-            .attr('class', 'death_'+year)
-            .attr("fill", d=> {return (parseInt(startDate.year) <= parseInt(year)) ? 'red' : 'transparent'})
-            .attr("transform","translate("+xdeaths+","+ydeaths+")")
-            xdeaths += 20;
-        }
-    }
-    // Render bar chart *********************
-
-    var countriesChartParent = document.getElementById("countriesChartHolder");
-
-
-    // append the svg object to the body of the page
-    const countriesChartsvg = d3.select("#countriesChart")
-        .attr("width", countriesChartParent.clientWidth)
-        .attr("height", countriesChartParent.clientHeight)
-        .append("g")
-        .attr("transform", `translate(60,20)`);
-
-// Parse the Data
-
-var countriesData = {
-    "2009": {
-        "Other": 58116,
-        "Unknown ": 46218,
-        "Iraq": 21355,
-        "Somalia": 18948,
-        "Afghanistan": 16937,
-        "Nigeria": 10638,
-        "Pakistan": 8383,
-        "Syrian Arab Rep.": 5331,
-        "Eritrea": 3912
-    },
-    "2010": {
-        "Other": 68461,
-        "Afghanistan": 19520,
-        "Iraq": 16594,
-        "Unknown ": 15059,
-        "Somalia": 14547,
-        "Pakistan": 8254,
-        "Nigeria": 7030,
-        "Syrian Arab Rep.": 5610,
-        "Eritrea": 3900
-    },
-    "2011": {
-        "Other": 90741,
-        "Unknown ": 49627,
-        "Afghanistan": 28189,
-        "Iraq": 15837,
-        "Nigeria": 12867,
-        "Pakistan": 12759,
-        "Somalia": 12142,
-        "Syrian Arab Rep.": 8105,
-        "Eritrea": 5003
-    },
-    "2012": {
-        "Other": 92453,
-        "Afghanistan": 27528,
-        "Syrian Arab Rep.": 23080,
-        "Unknown ": 22106,
-        "Pakistan": 16348,
-        "Somalia": 14394,
-        "Iraq": 12909,
-        "Nigeria": 6882,
-        "Eritrea": 6043
-    },
-    "2013": {
-        "Other": 114697,
-        "Syrian Arab Rep.": 50603,
-        "Afghanistan": 26609,
-        "Pakistan": 20168,
-        "Somalia": 19775,
-        "Eritrea": 13604,
-        "Unknown ": 13264,
-        "Iraq": 12108,
-        "Nigeria": 11711
-    },
-    "2014": {
-        "Other": 145841,
-        "Syrian Arab Rep.": 121569,
-        "Afghanistan": 41780,
-        "Eritrea": 34299,
-        "Pakistan": 22182,
-        "Iraq": 21653,
-        "Nigeria": 20164,
-        "Somalia": 17770,
-        "Unknown ": 9725
-    },
-    "2015": {
-        "Syrian Arab Rep.": 366864,
-        "Afghanistan": 178594,
-        "Other": 175686,
-        "Iraq": 122841,
-        "Pakistan": 48127,
-        "Eritrea": 31682,
-        "Nigeria": 31068,
-        "Unknown ": 24704,
-        "Somalia": 21957
-    },
-    "2016": {
-        "Syrian Arab Rep.": 344107,
-        "Other": 234556,
-        "Afghanistan": 190086,
-        "Iraq": 130700,
-        "Pakistan": 50156,
-        "Nigeria": 47997,
-        "Eritrea": 34380,
-        "Unknown ": 22237,
-        "Somalia": 22121
-    },
-    "2017": {
-        "Other": 214190,
-        "Syrian Arab Rep.": 108764,
-        "Afghanistan": 63437,
-        "Iraq": 55178,
-        "Nigeria": 40946,
-        "Pakistan": 35694,
-        "Eritrea": 24550,
-        "Somalia": 15364,
-        "Unknown ": 10192
-    },
-    "2018": {
-        "Other": 238311,
-        "Syrian Arab Rep.": 102065,
-        "Afghanistan": 68018,
-        "Iraq": 60559,
-        "Pakistan": 37738,
-        "Nigeria": 37053,
-        "Somalia": 19843,
-        "Eritrea": 16950,
-        "Unknown ": 13256
-    },
-    "2019": {
-        "Other": 195296,
-        "Syrian Arab Rep.": 76801,
-        "Afghanistan": 59045,
-        "Iraq": 33016,
-        "Pakistan": 27799,
-        "Nigeria": 24507,
-        "Unknown ": 23061,
-        "Somalia": 15395,
-        "Eritrea": 9877
-    },
-    "2020": {
-        "Other": 143155,
-        "Syrian Arab Rep.": 72104,
-        "Afghanistan": 52933,
-        "Pakistan": 22878,
-        "Iraq": 21629,
-        "Nigeria": 17347,
-        "Somalia": 12838,
-        "Unknown ": 7909,
-        "Eritrea": 7297
-    }
-}
-
-
-
-  // List of subgroups = header of the csv files = soil condition here
-  //const subgroups = data.columns.slice(1)
-
-  // Add X axis
-  const x = d3.scaleBand()
-  .domain(Object.keys(countriesData))
-      .range([0, countriesChartParent.clientWidth - 100])
-      .padding([0.2])
-      
-countriesChartsvg
-    .append("g")
-    .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40 })`)
-    .call(d3.axisBottom(x).tickSizeOuter(0));
-
-  // Add Y axis
-  const y = d3.scaleLinear()
-    .domain([0, 1200000])
-    .range([ countriesChartParent.clientHeight - 40, 0 ]);
-    countriesChartsvg.append("g")
-    .call(d3.axisLeft(y));
-
-    var color = d3.scaleOrdinal()
-    .domain(Object.keys(countriesData["2009"]))
-    .range(['#264653','#2A9D8F','#E9C46A','#F4A261','#E76F51','#4daf4a','#e41a1c','#377eb8','#4daf4a',,'#377eb8','#4daf4a'])
-
-    var arr = [];
-
-    for(var year in countriesData) {
-
-        // only add allowed years meaning < selectedCurrent
-
-        var temp = countriesData[year];
-        temp['year'] = year;
-        arr.push(temp);
-    }   
-
-  //stack the data? --> stack per subgroup
-  const stack= d3.stack()
-    .keys(Object.keys(countriesData["2009"]))
-    (arr)
-    //.value((obj, key) => {console.log(obj); console.log(key); return obj[key] });
-
-  // Show the bars
-  countriesChartsvg.append("g")
-    .selectAll("g")
-    // Enter in the stack data = loop key per key = group per group
-    .data(stack)
-    .join("g")
-      .attr("fill", function(d) {return color(d.key)})
-      .selectAll("rect")
-      // enter a second time = loop subgroup per subgroup to add all rectangles
-      .data(d => d)
-      .join("rect")
-        .attr("class", d => {return "year"+ d.data.year})
-        .attr("x", d => {return x(d.data.year)}) 
-        .attr("y", d => y(d[1]))
-        .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0})
-        .attr("width",x.bandwidth())
-
-
-
-
-    function updateDeathsperYear(monthChange) {
-        var tempDate = moment(currentDate);
-
-        if (monthChange < 0) {
-            for(var i = 1; i <= monthChange*-1; i++) {
-            tempDate.add(1,'month')
-
-            var elems = d3.selectAll(".death_"+ tempDate.format("YYYY"));
-            elems.transition().attr("fill", "transparent")   
-        }
+            var year_text = svg.append("text")
+                .attr("id", "d" + startDate.format('YYYYMM'))
+                .attr("x", barX + barW + circleR + 10)
+                .attr("y", (barHeight / 13) * i - textOffset)
+                .attr("font-size", textSize)
+                .text(text);
+            startDate.add(1, 'months');
         }
 
-        for(var i = 1; i <= monthChange; i++) {
-            tempDate.subtract(1,'month')
-            var elems = d3.selectAll(".death_"+ tempDate.format("YYYY"));
-            elems.transition().attr("fill", "black")   
+
+
+        // Render crosses ***********************
+
+        var deaths = {
+            "2013": {
+                "dead": 636,
+                "missing": 0,
+                "total": 636
+            },
+            "2014": {
+                "dead": 770,
+                "missing": 2768,
+                "total": 3538
+            },
+            "2015": {
+                "dead": 1555,
+                "missing": 2216,
+                "total": 3771
+            },
+            "2016": {
+                "dead": 1485,
+                "missing": 3611,
+                "total": 5096
+            },
+            "2017": {
+                "dead": 795,
+                "missing": 2344,
+                "total": 3139
+            },
+            "2018": {
+                "dead": 670,
+                "missing": 1600,
+                "total": 2270
+            },
+            "2019": {
+                "dead": 272,
+                "missing": 1063,
+                "total": 1335
+            },
+            "2020": {
+                "dead": 562,
+                "missing": 839,
+                "total": 1401
+            },
+            "2021": {
+                "dead": 708,
+                "missing": 937,
+                "total": 1645
+            }
         }
-    } 
+
+        var deathsHolder = document.getElementById("deathsHolder");
 
 
+        /*
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-cross" width="64" height="64" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+          <path d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
+        </svg>
+        */
 
-    function updateCountriesPerYear(monthChange) {
-        var tempDate = moment(currentDate);
-        if (monthChange < 0 ) {
-            for(var i = 1; i <= monthChange *-1; i++) {
-                tempDate.subtract(1,'month')
-                // only add allowed years meaning < selectedCurrent
-                var elems = d3.selectAll(".year"+ tempDate.format("YYYY"));
+        const deathChartsvg = d3.select("#deathsChart")
+            .attr("width", deathsHolder.clientWidth)
+            .attr("height", deathsHolder.clientHeight)
 
-                elems.transition().attr("height", 0)        
-            }   
 
+        var xdeaths = 10;
+        var ydeaths = 10;
+
+        var deathSize = 400;
+
+        document.getElementById('deathCountSize').innerHTML = deathSize.toString() + "x";
+
+        for (var year in deaths) {
+
+            for (i = 0; i <= deaths[year].total; i += deathSize) {
+                d3.select("#deathsChart")
+                    .append('path')
+                    .attr('d', "M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z")
+                    .attr('class', 'death_' + year)
+                    .attr("fill", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'red' : 'transparent' })
+                    .attr("transform", "translate(" + xdeaths + "," + ydeaths + ")")
+                xdeaths += 20;
+            }
+        }
+        // Render bar chart *********************
+
+        var countriesChartParent = document.getElementById("countriesChartHolder");
+
+
+        // append the svg object to the body of the page
+        const countriesChartsvg = d3.select("#countriesChart")
+            .attr("width", countriesChartParent.clientWidth)
+            .attr("height", countriesChartParent.clientHeight)
+            .append("g")
+            .attr("transform", `translate(60,20)`);
+
+        // Parse the Data
+
+        var countriesData = {
+            "2009": {
+                "Other": 58116,
+                "Unknown ": 46218,
+                "Iraq": 21355,
+                "Somalia": 18948,
+                "Afghanistan": 16937,
+                "Nigeria": 10638,
+                "Pakistan": 8383,
+                "Syrian Arab Rep.": 5331,
+                "Eritrea": 3912
+            },
+            "2010": {
+                "Other": 68461,
+                "Afghanistan": 19520,
+                "Iraq": 16594,
+                "Unknown ": 15059,
+                "Somalia": 14547,
+                "Pakistan": 8254,
+                "Nigeria": 7030,
+                "Syrian Arab Rep.": 5610,
+                "Eritrea": 3900
+            },
+            "2011": {
+                "Other": 90741,
+                "Unknown ": 49627,
+                "Afghanistan": 28189,
+                "Iraq": 15837,
+                "Nigeria": 12867,
+                "Pakistan": 12759,
+                "Somalia": 12142,
+                "Syrian Arab Rep.": 8105,
+                "Eritrea": 5003
+            },
+            "2012": {
+                "Other": 92453,
+                "Afghanistan": 27528,
+                "Syrian Arab Rep.": 23080,
+                "Unknown ": 22106,
+                "Pakistan": 16348,
+                "Somalia": 14394,
+                "Iraq": 12909,
+                "Nigeria": 6882,
+                "Eritrea": 6043
+            },
+            "2013": {
+                "Other": 114697,
+                "Syrian Arab Rep.": 50603,
+                "Afghanistan": 26609,
+                "Pakistan": 20168,
+                "Somalia": 19775,
+                "Eritrea": 13604,
+                "Unknown ": 13264,
+                "Iraq": 12108,
+                "Nigeria": 11711
+            },
+            "2014": {
+                "Other": 145841,
+                "Syrian Arab Rep.": 121569,
+                "Afghanistan": 41780,
+                "Eritrea": 34299,
+                "Pakistan": 22182,
+                "Iraq": 21653,
+                "Nigeria": 20164,
+                "Somalia": 17770,
+                "Unknown ": 9725
+            },
+            "2015": {
+                "Syrian Arab Rep.": 366864,
+                "Afghanistan": 178594,
+                "Other": 175686,
+                "Iraq": 122841,
+                "Pakistan": 48127,
+                "Eritrea": 31682,
+                "Nigeria": 31068,
+                "Unknown ": 24704,
+                "Somalia": 21957
+            },
+            "2016": {
+                "Syrian Arab Rep.": 344107,
+                "Other": 234556,
+                "Afghanistan": 190086,
+                "Iraq": 130700,
+                "Pakistan": 50156,
+                "Nigeria": 47997,
+                "Eritrea": 34380,
+                "Unknown ": 22237,
+                "Somalia": 22121
+            },
+            "2017": {
+                "Other": 214190,
+                "Syrian Arab Rep.": 108764,
+                "Afghanistan": 63437,
+                "Iraq": 55178,
+                "Nigeria": 40946,
+                "Pakistan": 35694,
+                "Eritrea": 24550,
+                "Somalia": 15364,
+                "Unknown ": 10192
+            },
+            "2018": {
+                "Other": 238311,
+                "Syrian Arab Rep.": 102065,
+                "Afghanistan": 68018,
+                "Iraq": 60559,
+                "Pakistan": 37738,
+                "Nigeria": 37053,
+                "Somalia": 19843,
+                "Eritrea": 16950,
+                "Unknown ": 13256
+            },
+            "2019": {
+                "Other": 195296,
+                "Syrian Arab Rep.": 76801,
+                "Afghanistan": 59045,
+                "Iraq": 33016,
+                "Pakistan": 27799,
+                "Nigeria": 24507,
+                "Unknown ": 23061,
+                "Somalia": 15395,
+                "Eritrea": 9877
+            },
+            "2020": {
+                "Other": 143155,
+                "Syrian Arab Rep.": 72104,
+                "Afghanistan": 52933,
+                "Pakistan": 22878,
+                "Iraq": 21629,
+                "Nigeria": 17347,
+                "Somalia": 12838,
+                "Unknown ": 7909,
+                "Eritrea": 7297
+            }
         }
 
-        for(var i = 1; i <= monthChange; i++) {
-            tempDate.subtract(1,'month')
+
+
+        // List of subgroups = header of the csv files = soil condition here
+        //const subgroups = data.columns.slice(1)
+
+        // Add X axis
+        const x = d3.scaleBand()
+            .domain(Object.keys(countriesData))
+            .range([0, countriesChartParent.clientWidth - 100])
+            .padding([0.2])
+
+        countriesChartsvg
+            .append("g")
+            .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
+            .call(d3.axisBottom(x).tickSizeOuter(0));
+
+        // Add Y axis
+        const y = d3.scaleLinear()
+            .domain([0, 1200000])
+            .range([countriesChartParent.clientHeight - 40, 0]);
+        countriesChartsvg.append("g")
+            .call(d3.axisLeft(y));
+
+        var color = d3.scaleOrdinal()
+            .domain(Object.keys(countriesData["2009"]))
+            .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#4daf4a', , '#377eb8', '#4daf4a'])
+
+        var arr = [];
+
+        for (var year in countriesData) {
 
             // only add allowed years meaning < selectedCurrent
-            var elems = d3.selectAll(".year"+ tempDate.format("YYYY"));
 
-            elems.transition().attr("height", d => { return y(d[0]) - y(d[1])} )        
-        }   
-    }
+            var temp = countriesData[year];
+            temp['year'] = year;
+            arr.push(temp);
+        }
 
-    function updateYearSlider(monthChange) {
+        //stack the data? --> stack per subgroup
+        const stack = d3.stack()
+            .keys(Object.keys(countriesData["2009"]))
+            (arr)
+        //.value((obj, key) => {console.log(obj); console.log(key); return obj[key] });
 
-        var oldDate = moment(currentDate);
-        
+        // Show the bars
+        countriesChartsvg.append("g")
+            .selectAll("g")
+            // Enter in the stack data = loop key per key = group per group
+            .data(stack)
+            .join("g")
+            .attr("fill", function (d) { return color(d.key) })
+            .selectAll("rect")
+            // enter a second time = loop subgroup per subgroup to add all rectangles
+            .data(d => d)
+            .join("rect")
+            .attr("class", d => { return "year" + d.data.year })
+            .attr("x", d => { return x(d.data.year) })
+            .attr("y", d => y(d[1]))
+            .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0 })
+            .attr("width", x.bandwidth())
 
-        currentDate.add(monthChange, 'months');
-        
-        if (monthChange > 0) {
-            oldDate.add(12,'months');
-            // going further in time
-            // insert below svg
-            for (var i = 1; i <= monthChange; i++) {
-                //
-                oldDate.add(1,'months');
 
-                let text = oldDate.format('MMMM YYYY');
-                if (oldDate.month() != 0) {
-                    text = oldDate.format('MMMM')
-                }                 
-                var year_text = svg.append("text")
-                .attr("id", "d"+oldDate.format('YYYYMM'))
-                .attr("x",barX +barW + circleR + 10)
-                .attr("y", (barHeight + (barHeight /13) * i) - textOffset )
-                .attr("font-size", textSize) 
-                .attr("class","activeDate")
-                .text(text);                       
-            
+
+
+        function updateDeathsperYear(monthChange) {
+            var tempDate = moment(currentDate);
+
+            if (monthChange < 0) {
+                for (var i = 1; i <= monthChange * -1; i++) {
+                    tempDate.add(1, 'month')
+
+                    var elems = d3.selectAll(".death_" + tempDate.format("YYYY"));
+                    elems.transition().attr("fill", "transparent")
+                }
             }
-            // animate and mobve dates
 
-            var startMovingDate = moment(currentDate);
-            startMovingDate.subtract(monthChange,'months');
+            for (var i = 1; i <= monthChange; i++) {
+                tempDate.subtract(1, 'month')
+                var elems = d3.selectAll(".death_" + tempDate.format("YYYY"));
+                elems.transition().attr("fill", "black")
+            }
+        }
 
-            // Improve by select all?
-            for (var i = 0; i <= monthChange + 12; i++) {
 
-                
-                var elem = d3.select("#d"+startMovingDate.format('YYYYMM'));
-                elem          
-                .attr("y", elem.attr("y") - (barHeight /13) * monthChange )
-                
-                //.duration(500)
 
-                if (startMovingDate.diff(currentDate, 'months') == 0) {
-                    elem.attr("style", "font-weight:bold")
-                } else {
-                    elem.attr("style", "")
+        function updateCountriesPerYear(monthChange) {
+            var tempDate = moment(currentDate);
+            if (monthChange < 0) {
+                for (var i = 1; i <= monthChange * -1; i++) {
+                    tempDate.subtract(1, 'month')
+                    // only add allowed years meaning < selectedCurrent
+                    var elems = d3.selectAll(".year" + tempDate.format("YYYY"));
+
+                    elems.transition().attr("height", 0)
                 }
 
-
-                startMovingDate.add(1,'months');
-                
-
-
             }
-        
-            var outrangeDate = moment(currentDate);
-            //outrangeDate.subtract(12, 'months');
 
-            // remove old below svg
-            for (var i = 0; i < monthChange; i++) {
-                outrangeDate.subtract(1,'months');
-                d3.select("#d"+outrangeDate.format('YYYYMM')).remove();
+            for (var i = 1; i <= monthChange; i++) {
+                tempDate.subtract(1, 'month')
+
+                // only add allowed years meaning < selectedCurrent
+                var elems = d3.selectAll(".year" + tempDate.format("YYYY"));
+
+                elems.transition().attr("height", d => { return y(d[0]) - y(d[1]) })
             }
         }
 
-        if (monthChange < 0) {
+        function updateYearSlider(monthChange) {
 
-            // going further in time
-            // insert below svg
-            for (var i = 0; i < monthChange * -1; i++) {                
-                oldDate.subtract(1,'months');                
+            var oldDate = moment(currentDate);
 
-                let text = oldDate.format('MMMM YYYY');
-                if (oldDate.month() != 0) {
-                    text = oldDate.format('MMMM')
-                }    
-                var year_text = svg.append("text")
-                .attr("id", "d"+oldDate.format('YYYYMM'))
-                .attr("x",barX +barW + circleR + 10)
-                .attr("y", ( -1 * (barHeight /13) * i) - textOffset )
-                .attr("font-size", textSize) 
-                .attr("class","activeDate")
-                .text(text);       
+
+            currentDate.add(monthChange, 'months');
+
+            if (monthChange > 0) {
+                oldDate.add(12, 'months');
+                // going further in time
+                // insert below svg
+                for (var i = 1; i <= monthChange; i++) {
+                    //
+                    oldDate.add(1, 'months');
+
+                    let text = oldDate.format('MMMM YYYY');
+                    if (oldDate.month() != 0) {
+                        text = oldDate.format('MMMM')
+                    }
+                    var year_text = svg.append("text")
+                        .attr("id", "d" + oldDate.format('YYYYMM'))
+                        .attr("x", barX + barW + circleR + 10)
+                        .attr("y", (barHeight + (barHeight / 13) * i) - textOffset)
+                        .attr("font-size", textSize)
+                        .attr("class", "activeDate")
+                        .text(text);
+
+                }
+                // animate and mobve dates
+
+                var startMovingDate = moment(currentDate);
+                startMovingDate.subtract(monthChange, 'months');
+
+                // Improve by select all?
+                for (var i = 0; i <= monthChange + 12; i++) {
+
+
+                    var elem = d3.select("#d" + startMovingDate.format('YYYYMM'));
+                    elem
+                        .attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
+
+                    //.duration(500)
+
+                    if (startMovingDate.diff(currentDate, 'months') == 0) {
+                        elem.attr("style", "font-weight:bold")
+                    } else {
+                        elem.attr("style", "")
+                    }
+
+
+                    startMovingDate.add(1, 'months');
+
+
+
+                }
+
+                var outrangeDate = moment(currentDate);
+                //outrangeDate.subtract(12, 'months');
+
+                // remove old below svg
+                for (var i = 0; i < monthChange; i++) {
+                    outrangeDate.subtract(1, 'months');
+                    d3.select("#d" + outrangeDate.format('YYYYMM')).remove();
+                }
             }
-            // animate and mobve dates
 
-            var startMovingDate = moment(currentDate);
-            //startMovingDate.add(monthChange,"month");
+            if (monthChange < 0) {
 
-            // Improve by select all?
-            for (var i = 0; i <= monthChange *-1 + 12; i++) {
-                var elem = d3.select("#d"+startMovingDate.format('YYYYMM'));
-                elem       
-                .attr("y", elem.attr("y") - (barHeight /13) * monthChange  )
+                // going further in time
+                // insert below svg
+                for (var i = 0; i < monthChange * -1; i++) {
+                    oldDate.subtract(1, 'months');
 
-                if (startMovingDate.diff(currentDate, 'months') == 0) {
-                    elem.attr("style", "font-weight:bold")
-                } else {
-                    elem.attr("style", "")
-                }                
-                startMovingDate.add(1,'months');
+                    let text = oldDate.format('MMMM YYYY');
+                    if (oldDate.month() != 0) {
+                        text = oldDate.format('MMMM')
+                    }
+                    var year_text = svg.append("text")
+                        .attr("id", "d" + oldDate.format('YYYYMM'))
+                        .attr("x", barX + barW + circleR + 10)
+                        .attr("y", (-1 * (barHeight / 13) * i) - textOffset)
+                        .attr("font-size", textSize)
+                        .attr("class", "activeDate")
+                        .text(text);
+                }
+                // animate and mobve dates
+
+                var startMovingDate = moment(currentDate);
+                //startMovingDate.add(monthChange,"month");
+
+                // Improve by select all?
+                for (var i = 0; i <= monthChange * -1 + 12; i++) {
+                    var elem = d3.select("#d" + startMovingDate.format('YYYYMM'));
+                    elem
+                        .attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
+
+                    if (startMovingDate.diff(currentDate, 'months') == 0) {
+                        elem.attr("style", "font-weight:bold")
+                    } else {
+                        elem.attr("style", "")
+                    }
+                    startMovingDate.add(1, 'months');
+                }
+
+                var outrangeDate = moment(currentDate);
+                outrangeDate.add(12, 'months');
+
+                // remove old below svg
+                //wait 200 sec 
+                for (var i = 0; i < monthChange * -1; i++) {
+                    outrangeDate.add(1, 'months');
+                    d3.select("#d" + outrangeDate.format('YYYYMM')).remove();
+                }
+
             }
-        
-            var outrangeDate = moment(currentDate);
-            outrangeDate.add(12, 'months');
-
-            // remove old below svg
-            //wait 200 sec 
-            for (var i = 0; i < monthChange * -1; i++) {
-                outrangeDate.add(1,'months');
-                d3.select("#d"+outrangeDate.format('YYYYMM')).remove();
-            }            
-
         }
-    }
 
 
-    function  handleScroll(event) {
+        function handleScroll(event) {
 
-        // Scrolling 
-        // Down: + 
-        // Up: - 
-        var increasedMonth = Math.round(event.deltaY / 80);
-        
-        //update Year slider 
-        updateYearSlider(increasedMonth);
-        updateCountriesPerYear(increasedMonth);
-        updateDeathsperYear(increasedMonth)
-    }
+            // Scrolling 
+            // Down: + 
+            // Up: - 
+            var increasedMonth = Math.round(event.deltaY / 80);
+
+            //update Year slider 
+            updateYearSlider(increasedMonth);
+            updateCountriesPerYear(increasedMonth);
+            updateDeathsperYear(increasedMonth)
+        }
 
 
-    /******** RENDER MAP ****/
-            // assign frame
-            let width = 2000,
+        /******** RENDER MAP ****/
+        // assign frame
+        let width = 2000,
             height = 1000
 
 
-            var yearSliderParent = document.getElementById("mapHolder");
+        var yearSliderParent = document.getElementById("mapHolder");
         let svg1 = d3.select("#main")
             .attr("width", yearSliderParent.clientWidth)
             .attr("height", yearSliderParent.clientHeight)
@@ -698,7 +693,7 @@ countriesChartsvg
 
 
         var oldDate = moment(currentDate);
-        var in_animation = false; 
+        var in_animation = false;
 
         // Load world map
         d3.json(geoJsonUrl_worldmap).then(geojson => {
@@ -708,6 +703,7 @@ countriesChartsvg
                 .enter()
                 .append("path")
                 .attr("xlink:href", "#border")
+                .attr("class", "country")
                 .attr("d", pathGenerator) // This is where the magic happens
                 .attr("stroke", "white") // Color of the lines themselves
                 .attr("fill", "grey") // Color uses to fill in the lines
@@ -717,7 +713,7 @@ countriesChartsvg
             // Load migrant routes and initialize all trajectories
             d3.json(geoJsonUrl_migrantroutes).then(geojson => {
 
-                
+
                 // Tell D3 to render a path for each GeoJSON feature
                 svg1.selectAll("#main")
                     .data(geojson.features)
@@ -807,43 +803,43 @@ countriesChartsvg
 
         function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t, scalingfactor) {
             var offset = -group_x * ((t - start) % 900) / 900;
-            console.log(currentDate.format("YYYY") + " - " +  oldDate.format("YYYY"))
+            console.log(currentDate.format("YYYY") + " - " + oldDate.format("YYYY"))
             if (currentDate.format("YYYY") != oldDate.format("YYYY")) {
                 arrowheads_x.transition()
-                .attr("transform", function (d) {
-                    console.log("scale met transition")
-                var l = d - offset;
+                    .attr("transform", function (d) {
+                        console.log("scale met transition")
+                        var l = d - offset;
 
-                if (l < 0) {
-                    l = totalLength_x + l;
-                } else if (l > totalLength_x) {
-                    l -= totalLength_x;
-                }
+                        if (l < 0) {
+                            l = totalLength_x + l;
+                        } else if (l > totalLength_x) {
+                            l -= totalLength_x;
+                        }
 
-                var p = pointAtLength(l, trajectory_x, scalingfactor);
-                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
-                });        
-                
+                        var p = pointAtLength(l, trajectory_x, scalingfactor);
+                        return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
+                    });
+
                 oldDate = moment(currentDate)
             } else {
 
 
 
-            arrowheads_x         
-            .attr("transform", function (d) {
+                arrowheads_x
+                    .attr("transform", function (d) {
 
-                var l = d - offset;
+                        var l = d - offset;
 
-                if (l < 0) {
-                    l = totalLength_x + l;
-                } else if (l > totalLength_x) {
-                    l -= totalLength_x;
-                }
+                        if (l < 0) {
+                            l = totalLength_x + l;
+                        } else if (l > totalLength_x) {
+                            l -= totalLength_x;
+                        }
 
-                var p = pointAtLength(l, trajectory_x, scalingfactor);
-                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
-            });
-        }
+                        var p = pointAtLength(l, trajectory_x, scalingfactor);
+                        return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
+                    });
+            }
         }
 
         function readTextFile(file, callback) {
@@ -952,4 +948,5 @@ countriesChartsvg
     </script>
 
 </body>
+
 </html>

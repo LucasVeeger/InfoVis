@@ -9,8 +9,14 @@
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
 
     <style type="text/css">
+        html {
+            height: 100%;
+        }
         body {
-            background-color: rgb(11, 7, 56);
+            background: #0f0c29;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            height: 100%; 
         }
 
         h1 {
@@ -86,11 +92,17 @@
 </head>
 
 <body>
+    <div class="ml-64 fixed p-8">
+        <div class=" text-2xl text-white "> IN4089 Data Visualisation Project Group 11</div>
 
-    <div id="yearSliderHolder" class="h-screen w-80 fixed t-0">
+        <div class="text-xl text-white"> Lorem ipsum slaksdlksajldjasasd </div>
+        
+    
+    </div>
+    <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="bottom-96 h-1/2 w-2/5 ml-64 fixed z-10">
+    <div id="countriesChartHolder" class="bottom-80 h-1/2 w-2/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
         <div class="flex text-white flex-row flex-wrap">
             <div class="flex">
@@ -151,7 +163,14 @@
             </svg> = <span id="deathCountSize"></span>
         </p>
         <svg id="deathsChart"></svg>
+
+        <div class="fixed  w-64 h-8 bottom-2 right-2 bg-white flex items-center rounded-lg"> 
+            <img class="h-6 ml-2" src="https://static.thenounproject.com/png/496854-200.png" />
+            <p  class="text-black text-xs ml-2"> Use your mouse-wheel to navigate</p>
+        </div>
     </div>
+
+
 
     <script>
 

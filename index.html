@@ -86,8 +86,17 @@
 </head>
 
 <body>
+<<<<<<< HEAD
 
     <div id="yearSliderHolder" class="h-screen w-80 fixed t-0">
+=======
+    <div class="ml-64 fixed">
+        <div class="p-8 text-2xl text-white "> IN4089 Data Visualisation Project Group 11</div>
+        
+    
+    </div>
+    <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
+>>>>>>> b4ae8a82df0c76acebe06406d7ade91e79cb849d
         <svg id="yearSlider"></svg>
     </div>
     <div id="countriesChartHolder" class="bottom-96 h-1/2 w-2/5 ml-64 fixed z-10">
@@ -133,6 +142,9 @@
         </div>
     </div>
 
+    <div>
+
+    </div>
 
     <div id="mapHolder" class="h-full w-4/5 absolute right-0 z-0">
         <svg id="main"></svg>
@@ -212,13 +224,16 @@
                 .attr("fill", "white")
                 .text(text);
 
+                if (startDate.diff(currentDate, 'months') == 0) {
+                    year_text.attr("style", "font-weight:bold;text-decoration:underline").attr("font-size","25")
+                }
 
-            var year_text = svg.append("text")
+                var year_text = svg.append("text")
                 .attr("id", "dt" + startDate.format('YYYYMM'))
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset + 20)
                 .attr("font-size", 15)
-                .attr("style", "white-space:pre-wrap")
+                .attr("style", "white-space:pre-wrap;width:100px; font-size: 10px;")
                 .attr("fill", "white")
                 .text("1234567890123456789012345678901234567890 \ <br>jahjdga asasdasdasd dhja");
             svg.append("text")
@@ -231,8 +246,10 @@
                 .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja")
                 ;
 
-
-            var test = svg.append("foreignObject")
+                .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja");    
+                
+                /*
+                var test = svg.append("foreignObject")
                 .attr("id", "dt" + startDate.format('YYYYMM'))
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset + 20)
@@ -242,9 +259,8 @@
             test.append("div")
                 .attr("width", 150)
                 .attr("height", 30)
-
-                .attr("xmlns", "http://www.w3.org/1999/xhtml")
-                .text("asjksa;jkdkasjasd asd assd das a");
+                .attr("xmlns","http://www.w3.org/1999/xhtml")
+                .text("asjksa;jkdkasjasd asd assd das a");   */
             startDate.add(1, 'months');
         }
 
@@ -354,142 +370,15 @@
             .attr("transform", `translate(60,20)`);
 
         // Parse the Data
+        // Add Y axis
+        const y = d3.scaleLinear()
+            .domain([0, 1200000])
+            .range([countriesChartParent.clientHeight - 40, 0]);
+        countriesChartsvg.append("g")
+            .attr("color", "white")
+            .call(d3.axisLeft(y));
 
-        var countriesData = {
-            "2009": {
-                "Other": 58116,
-                "Unknown ": 46218,
-                "Iraq": 21355,
-                "Somalia": 18948,
-                "Afghanistan": 16937,
-                "Nigeria": 10638,
-                "Pakistan": 8383,
-                "Syrian Arab Rep.": 5331,
-                "Eritrea": 3912
-            },
-            "2010": {
-                "Other": 68461,
-                "Afghanistan": 19520,
-                "Iraq": 16594,
-                "Unknown ": 15059,
-                "Somalia": 14547,
-                "Pakistan": 8254,
-                "Nigeria": 7030,
-                "Syrian Arab Rep.": 5610,
-                "Eritrea": 3900
-            },
-            "2011": {
-                "Other": 90741,
-                "Unknown ": 49627,
-                "Afghanistan": 28189,
-                "Iraq": 15837,
-                "Nigeria": 12867,
-                "Pakistan": 12759,
-                "Somalia": 12142,
-                "Syrian Arab Rep.": 8105,
-                "Eritrea": 5003
-            },
-            "2012": {
-                "Other": 92453,
-                "Afghanistan": 27528,
-                "Syrian Arab Rep.": 23080,
-                "Unknown ": 22106,
-                "Pakistan": 16348,
-                "Somalia": 14394,
-                "Iraq": 12909,
-                "Nigeria": 6882,
-                "Eritrea": 6043
-            },
-            "2013": {
-                "Other": 114697,
-                "Syrian Arab Rep.": 50603,
-                "Afghanistan": 26609,
-                "Pakistan": 20168,
-                "Somalia": 19775,
-                "Eritrea": 13604,
-                "Unknown ": 13264,
-                "Iraq": 12108,
-                "Nigeria": 11711
-            },
-            "2014": {
-                "Other": 145841,
-                "Syrian Arab Rep.": 121569,
-                "Afghanistan": 41780,
-                "Eritrea": 34299,
-                "Pakistan": 22182,
-                "Iraq": 21653,
-                "Nigeria": 20164,
-                "Somalia": 17770,
-                "Unknown ": 9725
-            },
-            "2015": {
-                "Syrian Arab Rep.": 366864,
-                "Afghanistan": 178594,
-                "Other": 175686,
-                "Iraq": 122841,
-                "Pakistan": 48127,
-                "Eritrea": 31682,
-                "Nigeria": 31068,
-                "Unknown ": 24704,
-                "Somalia": 21957
-            },
-            "2016": {
-                "Syrian Arab Rep.": 344107,
-                "Other": 234556,
-                "Afghanistan": 190086,
-                "Iraq": 130700,
-                "Pakistan": 50156,
-                "Nigeria": 47997,
-                "Eritrea": 34380,
-                "Unknown ": 22237,
-                "Somalia": 22121
-            },
-            "2017": {
-                "Other": 214190,
-                "Syrian Arab Rep.": 108764,
-                "Afghanistan": 63437,
-                "Iraq": 55178,
-                "Nigeria": 40946,
-                "Pakistan": 35694,
-                "Eritrea": 24550,
-                "Somalia": 15364,
-                "Unknown ": 10192
-            },
-            "2018": {
-                "Other": 238311,
-                "Syrian Arab Rep.": 102065,
-                "Afghanistan": 68018,
-                "Iraq": 60559,
-                "Pakistan": 37738,
-                "Nigeria": 37053,
-                "Somalia": 19843,
-                "Eritrea": 16950,
-                "Unknown ": 13256
-            },
-            "2019": {
-                "Other": 195296,
-                "Syrian Arab Rep.": 76801,
-                "Afghanistan": 59045,
-                "Iraq": 33016,
-                "Pakistan": 27799,
-                "Nigeria": 24507,
-                "Unknown ": 23061,
-                "Somalia": 15395,
-                "Eritrea": 9877
-            },
-            "2020": {
-                "Other": 143155,
-                "Syrian Arab Rep.": 72104,
-                "Afghanistan": 52933,
-                "Pakistan": 22878,
-                "Iraq": 21629,
-                "Nigeria": 17347,
-                "Somalia": 12838,
-                "Unknown ": 7909,
-                "Eritrea": 7297
-            }
-        }
-
+        d3.json("https://raw.githubusercontent.com/quintene/data_vis_data/main/country_info.json").then(countriesData => {
 
 
         // List of subgroups = header of the csv files = soil condition here
@@ -507,12 +396,6 @@
             .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
             .call(d3.axisBottom(x).tickSizeOuter(0));
 
-        // Add Y axis
-        const y = d3.scaleLinear()
-            .domain([0, 1100000])
-            .range([countriesChartParent.clientHeight - 40, 0]);
-        countriesChartsvg.append("g").attr("color", "white")
-            .call(d3.axisLeft(y));
 
         var color = d3.scaleOrdinal()
             .domain(Object.keys(countriesData["2009"]))
@@ -552,7 +435,7 @@
             .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0 })
             .attr("width", x.bandwidth())
 
-
+    });
 
 
         function updateDeathsperYear(monthChange) {
@@ -603,8 +486,21 @@
 
             var oldDate = moment(currentDate);
 
+            var newDate = moment(currentDate) 
+            newDate.add(monthChange, 'months');
+            
+            if (parseInt(newDate.format("YYYY")) < 2009) {
+                currentDate = moment("2009")
+                return;
+            }
 
-            currentDate.add(monthChange, 'months');
+            if (parseInt(newDate.format("YYYY")) > 2021) {
+                newDate = moment("2021")
+                return;
+            }
+
+            currentDate = moment(newDate)
+
 
             if (monthChange > 0) {
                 oldDate.add(12, 'months');
@@ -644,7 +540,8 @@
                     //.duration(500)
 
                     if (startMovingDate.diff(currentDate, 'months') == 0) {
-                        elem.attr("style", "font-weight:bold")
+                        elem.attr("style", "font-weight:bold; text-decoration: underline;")
+                        .attr("font-size", 25)
                     } else {
                         elem.attr("style", "")
                     }
@@ -698,7 +595,8 @@
                         .attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
 
                     if (startMovingDate.diff(currentDate, 'months') == 0) {
-                        elem.attr("style", "font-weight:bold")
+                        elem.attr("style", "font-weight:bold; text-decoration: underline;")
+                        .attr("font-size", 25)
                     } else {
                         elem.attr("style", "")
                     }

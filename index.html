@@ -63,6 +63,10 @@
             stroke: #ff000036;
         }
 
+        #deathsHolder {
+            color: white
+        }
+
         /* use.Black_Sea {
         fill: #fa2bb5;
         stroke: #fa2bb5;
@@ -94,13 +98,13 @@
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-0 fixed">
+    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-32 fixed">
         <p class="p-3 ">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
                 height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
                 stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                <path d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
+                <path stroke="white" d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
             </svg> = <span id="deathCountSize"></span>
         </p>
         <svg id="deathsChart"></svg>
@@ -252,10 +256,15 @@
                     .attr('d', "M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z")
                     .attr('class', 'death_' + year)
                     .attr("stroke", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'white' : 'transparent' })
+                    .attr("fill", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'transparant' : 'transparent' })
                     .attr("transform", "translate(" + xdeaths + "," + ydeaths + ")")
                     
                     
                 xdeaths += 20;
+                if (xdeaths > deathsHolder.clientWidth /2 ) {
+                    xdeaths = 10
+                    ydeaths += 25
+                }
             }
         }
         // Render bar chart *********************

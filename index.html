@@ -9,8 +9,8 @@
     <script src="https://momentjs.com/downloads/moment.min.js"></script>
 
     <style type="text/css">
-        svg {
-            background-color: whitesmoke;
+        body {
+            background-color: rgb(11, 7, 56);
         }
 
         h1 {
@@ -23,13 +23,17 @@
 
         }
 
+        text {
+            color:white;
+        }
+
         #container {
             width: 800px;
             margin-left: auto;
             margin-right: auto;
             margin-top: 20px;
             padding: 20px;
-            background-color: white;
+            background-color: rgb(11, 7, 56);
             box-shadow: 1px 1px 1px 2px rgb(217, 217, 217);
         }
 
@@ -79,18 +83,18 @@
 
 <body>
 
-    <div id="yearSliderHolder" class="h-screen w-64 fixed t-0 bg-gray-50">
+    <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="h-1/5 w-1/5 ml-64 bg-gray-100 fixed z-10">
+    <div id="countriesChartHolder" class="h-1/5 w-1/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
     </div>
 
-    <div id="mapHolder" class="h-full w-4/5 bg-purple-500 absolute right-0 z-0">
+    <div id="mapHolder" class="h-full w-4/5 absolute right-0 z-0">
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bg-gray-50 bottom-0 fixed">
+    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-0 fixed">
         <p class="p-3 ">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
                 height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
@@ -138,7 +142,7 @@
             .attr('y', 0)
             .attr('width', barW)
             .attr('height', barHeight)
-            .attr('fill', '#69a3b2');
+            .attr('fill', 'white');
 
         var startDate = moment(currentDate);
 
@@ -161,6 +165,7 @@
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset)
                 .attr("font-size", textSize)
+                .attr("color", "white")
                 .text(text);
             startDate.add(1, 'months');
         }
@@ -479,7 +484,7 @@
             for (var i = 1; i <= monthChange; i++) {
                 tempDate.subtract(1, 'month')
                 var elems = d3.selectAll(".death_" + tempDate.format("YYYY"));
-                elems.transition().attr("fill", "black")
+                elems.transition().attr("fill", "white")
             }
         }
 
@@ -532,6 +537,7 @@
                         .attr("x", barX + barW + circleR + 10)
                         .attr("y", (barHeight + (barHeight / 13) * i) - textOffset)
                         .attr("font-size", textSize)
+                        .attr("color", "white")
                         .attr("class", "activeDate")
                         .text(text);
 
@@ -706,7 +712,7 @@
                 .attr("class", "country")
                 .attr("d", pathGenerator) // This is where the magic happens
                 .attr("stroke", "white") // Color of the lines themselves
-                .attr("fill", "grey") // Color uses to fill in the lines
+                .attr("fill", "black") // Color uses to fill in the lines
                 .attr("id", function (d) { return d.properties.name; })
                 .append("svg:title").text(function (d) { return d.properties.name; })
 

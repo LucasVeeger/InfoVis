@@ -699,6 +699,7 @@ countriesChartsvg
 
         var oldDate = moment(currentDate);
         var in_animation = false; 
+        var in_animation_index = {};
 
         // Load world map
         d3.json(geoJsonUrl_worldmap).then(geojson => {
@@ -805,13 +806,20 @@ countriesChartsvg
         }
 
 
-        function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t, scalingfactor) {
+        function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t, scalingfactor, index) {
             var offset = -group_x * ((t - start) % 900) / 900;
-            console.log(currentDate.format("YYYY") + " - " +  oldDate.format("YYYY"))
+
+            console.log(index)
+            if (in_animation_index[index] == true ) {
+                return
+            }
+
             if (currentDate.format("YYYY") != oldDate.format("YYYY")) {
-                arrowheads_x.transition()
+                in_animation_index[index] = true; 
+                arrowheads_x
+                .transition()
+                .duration(500)
                 .attr("transform", function (d) {
-                    console.log("scale met transition")
                 var l = d - offset;
 
                 if (l < 0) {
@@ -822,9 +830,28 @@ countriesChartsvg
 
                 var p = pointAtLength(l, trajectory_x, scalingfactor);
                 return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
+                })
+                .on("end", () => {
+                    in_animation_index[index] = false   
+            
+                    in_animation= false; 
+
+                    var change_date = true;
+                    for (i in in_animation_index) {
+                        if (in_animation_index == true) {
+                            change_date = false;
+                        }
+                    }
+
+                    if (change_date) {
+                        oldDate = moment(currentDate);
+                    }
+
                 });        
+
+    
                 
-                oldDate = moment(currentDate)
+               
             } else {
 
 
@@ -844,6 +871,24 @@ countriesChartsvg
                 return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
             });
         }
+        }
+
+        function resetAnimation(index) {
+            in_animation_index[index] = false   
+            
+            in_animation= false; 
+
+            var change_date = true;
+            for (i in in_animation_index) {
+                if (in_animation_index == true) {
+                    change_date = false;
+                }
+            }
+
+            if (change_date) {
+                oldDate = moment(currentDate);
+            }
+            
         }
 
         function readTextFile(file, callback) {
@@ -916,7 +961,7 @@ countriesChartsvg
             trajectories.forEach(updatefunction);
             function updatefunction(value, index, array) {
                 scalingfactor = fetch_scalingfactor(currentDate.format("YYYY"), trajectories[index])
-                update_route(arrowgroups[index], trajectories[index], groups[index], totalLengths[index], start, t, scalingfactor)
+                update_route(arrowgroups[index], trajectories[index], groups[index], totalLengths[index], start, t, scalingfactor, index)
             }
 
 

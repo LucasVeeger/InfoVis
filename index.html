@@ -92,7 +92,20 @@
     </div>
     <div id="countriesChartHolder" class="top-10 h-2/5 w-2/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
+        <div class="flex text-white flex-row flex-wrap"> 
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #264653;"></div><div class=""> Other </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #2A9D8F;"></div><div class=""> Unknown </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #E9C46A;"></div><div class=""> Iraq </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #F4A261;"></div><div class=""> Somalia </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #4daf4a;"></div><div class=""> Afghanistan </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #E76F51;"></div><div class=""> Nigeria </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #e41a1c;"></div><div class=""> Pakistan </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #377eb8;"></div><div class=""> Syrian Arab Rep. </div> </div>
+            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #9AE19D;"></div><div class=""> Eritrea</div> </div>
+            
+        </div>
     </div>
+    
 
     <div id="mapHolder" class="h-full w-4/5 absolute right-0 z-0">
         <svg id="main"></svg>
@@ -652,16 +665,16 @@
             var increasedMonth = Math.round(event.deltaY / 80);
 
             //update Year slider 
+            if(increasedMonth !=0) {
             updateYearSlider(increasedMonth);
             updateCountriesPerYear(increasedMonth);
             updateDeathsperYear(increasedMonth)
+            }
         }
 
 
         /******** RENDER MAP ****/
-        // assign frame
-        let width = 2000,
-            height = 1000
+
 
 
         var yearSliderParent = document.getElementById("mapHolder");

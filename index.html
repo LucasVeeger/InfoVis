@@ -24,7 +24,7 @@
         }
 
         text {
-            color:white;
+            color: white;
         }
 
         #container {
@@ -90,28 +90,55 @@
     <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
     </div>
-    <div id="countriesChartHolder" class="top-10 h-2/5 w-2/5 ml-64 fixed z-10">
+    <div id="countriesChartHolder" class="bottom-96 h-1/2 w-2/5 ml-64 fixed z-10">
         <svg id="countriesChart"></svg>
-        <div class="flex text-white flex-row flex-wrap"> 
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #264653;"></div><div class=""> Other </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #2A9D8F;"></div><div class=""> Unknown </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #E9C46A;"></div><div class=""> Iraq </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #F4A261;"></div><div class=""> Somalia </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #4daf4a;"></div><div class=""> Afghanistan </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #E76F51;"></div><div class=""> Nigeria </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #e41a1c;"></div><div class=""> Pakistan </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #377eb8;"></div><div class=""> Syrian Arab Rep. </div> </div>
-            <div class="flex"> <div class="w-3 h-3 m-2" style="background-color: #9AE19D;"></div><div class=""> Eritrea</div> </div>
-            
+        <div class="flex text-white flex-row flex-wrap">
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #264653;"></div>
+                <div class=""> Other </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #2A9D8F;"></div>
+                <div class=""> Unknown </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #E9C46A;"></div>
+                <div class=""> Iraq </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #F4A261;"></div>
+                <div class=""> Somalia </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #4daf4a;"></div>
+                <div class=""> Afghanistan </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #E76F51;"></div>
+                <div class=""> Nigeria </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #e41a1c;"></div>
+                <div class=""> Pakistan </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #377eb8;"></div>
+                <div class=""> Syrian Arab Rep. </div>
+            </div>
+            <div class="flex">
+                <div class="w-3 h-3 m-2" style="background-color: #B5E2FA;"></div>
+                <div class=""> Eritrea</div>
+            </div>
+
         </div>
     </div>
-    
+
 
     <div id="mapHolder" class="h-full w-4/5 absolute right-0 z-0">
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-32 fixed">
+    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-40 fixed">
         <p class="p-3 ">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
                 height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
@@ -170,7 +197,7 @@
                 .style("fill", "white")
                 .attr("r", circleR)
                 .attr("cx", barX + (barW / 2))
-                .attr("cy", (barHeight / 13) * i - textOffset - 5 );
+                .attr("cy", (barHeight / 13) * i - textOffset - 5);
 
             let text = startDate.format('MMMM YYYY');
             if (startDate.month() != 0) {
@@ -185,30 +212,39 @@
                 .attr("fill", "white")
                 .text(text);
 
-            /*
-                var year_text = svg.append("text")
+
+            var year_text = svg.append("text")
                 .attr("id", "dt" + startDate.format('YYYYMM'))
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset + 20)
                 .attr("font-size", 15)
                 .attr("style", "white-space:pre-wrap")
                 .attr("fill", "white")
-                .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja");    
-                */
-                
-                var test = svg.append("foreignObject")
+                .text("123456789012345678901234567890 \ <br>jahjdga asasdasdasd dhja");
+            svg.append("text")
+                .attr("id", "dt2" + startDate.format('YYYYMM'))
+                .attr("x", barX + barW + circleR + 10)
+                .attr("y", (barHeight / 13) * i - textOffset + 20 + 15)
+                .attr("font-size", 15)
+                .attr("style", "white-space:pre-wrap")
+                .attr("fill", "white")
+                .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja")
+                ;
+
+
+            var test = svg.append("foreignObject")
                 .attr("id", "dt" + startDate.format('YYYYMM'))
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset + 20)
                 .attr("width", 150)
                 .attr("height", 30)
 
-                test.append("div")
+            test.append("div")
                 .attr("width", 150)
                 .attr("height", 30)
 
-                .attr("xmlns","http://www.w3.org/1999/xhtml")
-                .text("asjksa;jkdkasjasd asd assd das a");   
+                .attr("xmlns", "http://www.w3.org/1999/xhtml")
+                .text("asjksa;jkdkasjasd asd assd das a");
             startDate.add(1, 'months');
         }
 
@@ -296,10 +332,10 @@
                     .attr("stroke", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'white' : 'transparent' })
                     .attr("fill", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'transparant' : 'transparent' })
                     .attr("transform", "translate(" + xdeaths + "," + ydeaths + ")")
-                    
-                    
+
+
                 xdeaths += 20;
-                if (xdeaths > deathsHolder.clientWidth /2 ) {
+                if (xdeaths > deathsHolder.clientWidth / 2) {
                     xdeaths = 10
                     ydeaths += 25
                 }
@@ -467,19 +503,20 @@
 
         countriesChartsvg
             .append("g")
+            .attr("color", "white")
             .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
             .call(d3.axisBottom(x).tickSizeOuter(0));
 
         // Add Y axis
         const y = d3.scaleLinear()
-            .domain([0, 1200000])
+            .domain([0, 1100000])
             .range([countriesChartParent.clientHeight - 40, 0]);
-        countriesChartsvg.append("g")
+        countriesChartsvg.append("g").attr("color", "white")
             .call(d3.axisLeft(y));
 
         var color = d3.scaleOrdinal()
             .domain(Object.keys(countriesData["2009"]))
-            .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#4daf4a', , '#377eb8', '#4daf4a'])
+            .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#B5E2FA'])
 
         var arr = [];
 
@@ -645,7 +682,7 @@
                         .attr("x", barX + barW + circleR + 10)
                         .attr("y", (-1 * (barHeight / 13) * i) - textOffset)
                         .attr("font-size", textSize)
-                        .attr("fill","white")
+                        .attr("fill", "white")
                         .attr("class", "activeDate")
                         .text(text);
                 }
@@ -690,10 +727,10 @@
             var increasedMonth = Math.round(event.deltaY / 80);
 
             //update Year slider 
-            if(increasedMonth !=0) {
-            updateYearSlider(increasedMonth);
-            updateCountriesPerYear(increasedMonth);
-            updateDeathsperYear(increasedMonth)
+            if (increasedMonth != 0) {
+                updateYearSlider(increasedMonth);
+                updateCountriesPerYear(increasedMonth);
+                updateDeathsperYear(increasedMonth)
             }
         }
 
@@ -749,7 +786,7 @@
 
 
         var oldDate = moment(currentDate);
-        var in_animation = false; 
+        var in_animation = false;
         var in_animation_index = {};
 
         // Load world map
@@ -861,48 +898,48 @@
         function update_route(arrowheads_x, trajectory_x, group_x, totalLength_x, start, t, scalingfactor, index) {
             var offset = -group_x * ((t - start) % 900) / 900;
 
-            if (in_animation_index[index] == true ) {
+            if (in_animation_index[index] == true) {
                 return
             }
 
             if (currentDate.format("YYYY") != oldDate.format("YYYY")) {
-                in_animation_index[index] = true; 
+                in_animation_index[index] = true;
                 arrowheads_x
-                .transition()
-                .duration(500)
-                .attr("transform", function (d) {
-                var l = d - offset;
+                    .transition()
+                    .duration(500)
+                    .attr("transform", function (d) {
+                        var l = d - offset;
 
-                if (l < 0) {
-                    l = totalLength_x + l;
-                } else if (l > totalLength_x) {
-                    l -= totalLength_x;
-                }
-
-                var p = pointAtLength(l, trajectory_x, scalingfactor);
-                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
-                })
-                .on("end", () => {
-                    in_animation_index[index] = false   
-            
-                    in_animation= false; 
-
-                    var change_date = true;
-                    for (i in in_animation_index) {
-                        if (in_animation_index == true) {
-                            change_date = false;
+                        if (l < 0) {
+                            l = totalLength_x + l;
+                        } else if (l > totalLength_x) {
+                            l -= totalLength_x;
                         }
-                    }
 
-                    if (change_date) {
-                        oldDate = moment(currentDate);
-                    }
+                        var p = pointAtLength(l, trajectory_x, scalingfactor);
+                        return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x, scalingfactor) + ") scale(" + scalingfactor + ")";
+                    })
+                    .on("end", () => {
+                        in_animation_index[index] = false
 
-                });        
+                        in_animation = false;
 
-    
-                
-               
+                        var change_date = true;
+                        for (i in in_animation_index) {
+                            if (in_animation_index == true) {
+                                change_date = false;
+                            }
+                        }
+
+                        if (change_date) {
+                            oldDate = moment(currentDate);
+                        }
+
+                    });
+
+
+
+
             } else {
 
 
@@ -925,9 +962,9 @@
         }
 
         function resetAnimation(index) {
-            in_animation_index[index] = false   
-            
-            in_animation= false; 
+            in_animation_index[index] = false
+
+            in_animation = false;
 
             var change_date = true;
             for (i in in_animation_index) {
@@ -939,7 +976,7 @@
             if (change_date) {
                 oldDate = moment(currentDate);
             }
-            
+
         }
 
         function readTextFile(file, callback) {
@@ -992,7 +1029,7 @@
                 // return scalingfactors[year][trajectory_x.getAttribute("id")] = Math.log(sum_IBCs)/Math.log(2) / dampingfactor
                 // return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / 1500000 - 3) / dampingfactor) + 3
                 scalefactor = 200000
-                return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / scalefactor > 1.75) ? 1.75 : ((sum_IBCs / scalefactor < 0.1) ? 0.1 : sum_IBCs / scalefactor)) 
+                return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / scalefactor > 1.75) ? 1.75 : ((sum_IBCs / scalefactor < 0.1) ? 0.1 : sum_IBCs / scalefactor))
             }
         }
 

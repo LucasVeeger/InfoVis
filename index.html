@@ -118,8 +118,10 @@
         <svg id="yearSlider"></svg>
     </div>
     <div id="countriesChartHolder" class="bottom-56 h-1/2 w-2/5 ml-64 fixed z-10">
+
+        <div id="countriestooltip" class="text-sm absolute top-0 right-0 bg-white text-blue-600 p-2 rounded" style="visibility: hidden;">sddsds</div>
         <svg id="countriesChart"></svg>
-        <div class="flex text-white flex-row flex-wrap">
+        <div class="flex text-white flex-row flex-wrap mt-1">
             <div class="flex">
                 <div class="w-3 h-3 m-2" style="background-color: #264653;"></div>
                 <div class=""> Other </div>
@@ -168,22 +170,28 @@
         <svg id="main"></svg>
     </div>
 
-    <div id="deathsHolder" class="h-20 w-2/5 ml-64 bottom-24 fixed">
-        <p class="p-3 ">
+    <div id="deathsHolder" class="h-24 w-3/5 ml-64 bottom-16 fixed">
+        <div class="p-3 flex ">
             <svg xmlns="http://www.w3.org/2000/svg" class="inline icon icon-tabler icon-tabler-cross" width="20"
                 height="20" viewBox="0 0 24 24" stroke-width="1.5" stroke="#000000" fill="none" stroke-linecap="round"
                 stroke-linejoin="round">
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path stroke="white" d="M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z" />
             </svg> = <span id="deathCountSize"></span>
-        </p>
-        <svg id="deathsChart"></svg>
 
+            <div class="inline ml-8"> Total <span id="deathcounter" class="font-bold">0<span> </span>
+            </div>
+            </div>
+
+
+
+        <svg id="deathsChart"></svg>
+    </div>
         <div class="fixed  w-64 h-8 bottom-2 right-2 bg-white flex items-center rounded-lg">
             <img class="h-6 ml-2" src="https://static.thenounproject.com/png/496854-200.png" />
             <p class="text-black text-xs ml-2"> Use your mouse-wheel to navigate</p>
         </div>
-    </div>
+
 
 
 
@@ -301,7 +309,7 @@
                 year_text.attr("style", "font-weight:bold;text-decoration:underline").attr("font-size", "25")
             }
 
-                console.log(monthdescription)
+
                 
                 
                 if (monthdescription[parseInt(startDate.format('YYYYMM'))]) {
@@ -385,9 +393,10 @@
         var xdeaths = 10;
         var ydeaths = 10;
 
-        var deathSize = 400;
+        var deathSize = 300;
 
         document.getElementById('deathCountSize').innerHTML = deathSize.toString() + " people dead or missing on sea ";
+        var total = 0; 
 
         for (var year in deaths) {
 
@@ -396,6 +405,7 @@
                     .append('path')
                     .attr('d', "M10 21h4v-9h5v-4h-5v-5h-4v5h-5v4h5z")
                     .attr('class', 'death_' + year)
+                    .attr('value', i)
                     .attr("stroke", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'white' : 'transparent' })
                     .attr("fill", d => { return (parseInt(startDate.year) <= parseInt(year)) ? 'transparant' : 'transparent' })
                     .attr("transform", "translate(" + xdeaths + "," + ydeaths + ")")
@@ -418,13 +428,13 @@
             .attr("width", countriesChartParent.clientWidth)
             .attr("height", countriesChartParent.clientHeight)
             .append("g")
-            .attr("transform", `translate(60,20)`);
+            .attr("transform", `translate(80,10)`);
 
         // Parse the Data
         // Add Y axis
         const y = d3.scaleLinear()
             .domain([0, 1200000])
-            .range([countriesChartParent.clientHeight - 40, 0]);
+            .range([countriesChartParent.clientHeight - 50, 0]);
         countriesChartsvg.append("g")
             .attr("color", "white")
             .call(d3.axisLeft(y));
@@ -444,13 +454,37 @@
             countriesChartsvg
                 .append("g")
                 .attr("color", "white")
-                .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
+                .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 50})`)
                 .call(d3.axisBottom(x).tickSizeOuter(0));
+
+
+                  // text label for the x axis
+                  countriesChartsvg.append("text")             
+                    .attr("transform",
+                            "translate(" + ( countriesChartParent.clientWidth/2) + " ," + 
+                                        (countriesChartParent.clientHeight  - 13 ) + ")")
+                    .style("text-anchor", "middle")
+                    .attr("fill", "white")
+                    .text("Year");
+
+
+
+                    // text label for the y axis
+                    countriesChartsvg.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 0 - 80)
+                        .attr("x", 0- (countriesChartParent.clientHeight / 2))
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .attr("fill", "white")
+                        .text("Migrants per year/country");  
 
 
             var color = d3.scaleOrdinal()
                 .domain(Object.keys(countriesData["2009"]))
                 .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#B5E2FA'])
+
+                
 
             var arr = [];
 
@@ -461,6 +495,7 @@
                 var temp = countriesData[year];
                 temp['year'] = year;
                 arr.push(temp);
+
             }
 
             //stack the data? --> stack per subgroup
@@ -468,7 +503,7 @@
                 .keys(Object.keys(countriesData["2009"]))
                 (arr)
             //.value((obj, key) => {console.log(obj); console.log(key); return obj[key] });
-
+            var tooltip = d3.select("#countriestooltip")
             // Show the bars
             countriesChartsvg.append("g")
                 .selectAll("g")
@@ -480,17 +515,25 @@
                 // enter a second time = loop subgroup per subgroup to add all rectangles
                 .data(d => d)
                 .join("rect")
+
                 .attr("class", d => { return "year" + d.data.year })
                 .attr("x", d => { return x(d.data.year) })
                 .attr("y", d => y(d[1]))
+                .attr("amount",d=> {return (d[1] - d[0])})
                 .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0 })
                 .attr("width", x.bandwidth())
-
+                .on("mouseover", function(d){  tooltip.style("visibility", "visible"); tooltip.text(numberWithCommas(d3.select(this).attr('amount'))); return })
+                .on("mouseout", function(){return tooltip.style("visibility", "hidden");});
         });
+
+
+
 
 
         function updateDeathsperYear(monthChange) {
             var tempDate = moment(currentDate);
+
+            var deathcounter = document.getElementById("deathcounter");
 
             if (monthChange < 0) {
                 for (var i = 1; i <= monthChange * -1; i++) {
@@ -501,11 +544,29 @@
                 }
             }
 
-            for (var i = 1; i <= monthChange; i++) {
+            for (var i = 0; i <= monthChange; i++) {
                 tempDate.subtract(1, 'month')
                 var elems = d3.selectAll(".death_" + tempDate.format("YYYY"));
                 elems.transition().attr("stroke", "white")
             }
+
+            var counter = 0; 
+
+            for (var year in deaths) {
+                
+
+                console.log(year + " vs" +currentDate.format("YYYY") )
+                if (parseInt(year) <= parseInt(currentDate.format("YYYY"))) {
+
+                    counter += deaths[year].total;
+                }
+
+                deathcounter.innerHTML = counter
+            }
+        }
+
+        function numberWithCommas(x) {
+            return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
 
 
@@ -610,7 +671,6 @@
 
                     if (!elemsub.empty()) {
 
-                        console.log("YUpdate position")
                         elemsub.each(function(d, i) {   
 
                          d3.select(this).attr("y", d3.select(this).attr("y") - (barHeight / 13) * monthChange);
@@ -672,7 +732,7 @@
                     var difference = 20;
                     for (var text2 in monthdescription[parseInt(oldDate.format('YYYYMM'))]) {
 
-                        console.log(monthdescription[parseInt(oldDate.format('YYYYMM'))][text2])
+
                         svg.append("text")
                         .attr("class", "dt" + oldDate.format('YYYYMM'))
                         .attr("x", barX + barW + circleR + 10)
@@ -700,7 +760,6 @@
 
                         if (!elemsub.empty()) {
 
-                            console.log("YUpdate position naar beneden")
                             elemsub.each(function(d, i) {   
 
                                 d3.select(this).attr("y", d3.select(this).attr("y") - (barHeight / 13) * monthChange)

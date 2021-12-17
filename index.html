@@ -12,11 +12,15 @@
         html {
             height: 100%;
         }
+
         body {
-            background: #0f0c29;  /* fallback for old browsers */
-            background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);  /* Chrome 10-25, Safari 5.1-6 */
-            background: linear-gradient(to right, #24243e, #302b63, #0f0c29); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-            height: 100%; 
+            background: #0f0c29;
+            /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, #24243e, #302b63, #0f0c29);
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            height: 100%;
         }
 
         h1 {
@@ -46,6 +50,12 @@
         .country:hover {
             fill: rgb(17, 17, 17);
             cursor: pointer;
+        }
+
+        path {
+            stroke-linejoin: round;
+            stroke-miterlimit: 2;
+            stroke-linecap: round;
         }
 
 
@@ -93,11 +103,16 @@
 
 <body>
     <div class="ml-64 fixed p-8">
-        <div class=" text-2xl text-white "> IN4089 Data Visualisation Project Group 11</div>
+        <div class=" text-2xl text-white "> The European Refugee Crisis: <br> </div>
+        <div class=" text-2xl text-white "> A migratory visualization<br> <br></div>
 
-        <div class="text-xl text-white"> Lorem ipsum slaksdlksajldjasasd </div>
-        
-    
+        <div class="text-xl text-white w-7/12"> As reported by the UN Refugee Agency, the UNHCR, over 12 million people of concern (refugees, asylum-seekers and/or migrant) are staying in Europe by the 31st of December 2020. <br> 
+        Different organisations collect extensive amounts of data covering the migrational events around these people. <br> <br> 
+        On the map charted below you can observe the magnitudes of the migration flows into Europe accross different routes. <br> Frontex, the European border management agency, collects data on Illegal Border Crossings (IBCs) among different routes taken accross African Mediterrenean, Adriatic and Balkan regions. Using your mouse wheel you can scroll through time.
+        The graph below shows the amount of migrant that applied for asylum for most applying nationalities.    
+        </div>
+
+
     </div>
     <div id="yearSliderHolder" class="h-screen w-64 fixed t-0">
         <svg id="yearSlider"></svg>
@@ -164,9 +179,9 @@
         </p>
         <svg id="deathsChart"></svg>
 
-        <div class="fixed  w-64 h-8 bottom-2 right-2 bg-white flex items-center rounded-lg"> 
+        <div class="fixed  w-64 h-8 bottom-2 right-2 bg-white flex items-center rounded-lg">
             <img class="h-6 ml-2" src="https://static.thenounproject.com/png/496854-200.png" />
-            <p  class="text-black text-xs ml-2"> Use your mouse-wheel to navigate</p>
+            <p class="text-black text-xs ml-2"> Use your mouse-wheel to navigate</p>
         </div>
     </div>
 
@@ -234,11 +249,11 @@
                 .attr("fill", "white")
                 .text(text);
 
-                if (startDate.diff(currentDate, 'months') == 0) {
-                    year_text.attr("style", "font-weight:bold;text-decoration:underline").attr("font-size","25")
-                }
+            if (startDate.diff(currentDate, 'months') == 0) {
+                year_text.attr("style", "font-weight:bold;text-decoration:underline").attr("font-size", "25")
+            }
 
-                var year_text = svg.append("text")
+            var year_text = svg.append("text")
                 .attr("id", "dt" + startDate.format('YYYYMM'))
                 .attr("x", barX + barW + circleR + 10)
                 .attr("y", (barHeight / 13) * i - textOffset + 20)
@@ -254,21 +269,21 @@
                 .attr("style", "white-space:pre-wrap")
                 .attr("fill", "white")
                 .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja")
-                ; 
-                
-                /*
-                var test = svg.append("foreignObject")
-                .attr("id", "dt" + startDate.format('YYYYMM'))
-                .attr("x", barX + barW + circleR + 10)
-                .attr("y", (barHeight / 13) * i - textOffset + 20)
-                .attr("width", 150)
-                .attr("height", 30)
+                ;
 
-            test.append("div")
-                .attr("width", 150)
-                .attr("height", 30)
-                .attr("xmlns","http://www.w3.org/1999/xhtml")
-                .text("asjksa;jkdkasjasd asd assd das a");   */
+            /*
+            var test = svg.append("foreignObject")
+            .attr("id", "dt" + startDate.format('YYYYMM'))
+            .attr("x", barX + barW + circleR + 10)
+            .attr("y", (barHeight / 13) * i - textOffset + 20)
+            .attr("width", 150)
+            .attr("height", 30)
+
+        test.append("div")
+            .attr("width", 150)
+            .attr("height", 30)
+            .attr("xmlns","http://www.w3.org/1999/xhtml")
+            .text("asjksa;jkdkasjasd asd assd das a");   */
             startDate.add(1, 'months');
         }
 
@@ -389,61 +404,61 @@
         d3.json("https://raw.githubusercontent.com/quintene/data_vis_data/main/country_info.json").then(countriesData => {
 
 
-        // List of subgroups = header of the csv files = soil condition here
-        //const subgroups = data.columns.slice(1)
+            // List of subgroups = header of the csv files = soil condition here
+            //const subgroups = data.columns.slice(1)
 
-        // Add X axis
-        const x = d3.scaleBand()
-            .domain(Object.keys(countriesData))
-            .range([0, countriesChartParent.clientWidth - 100])
-            .padding([0.2])
+            // Add X axis
+            const x = d3.scaleBand()
+                .domain(Object.keys(countriesData))
+                .range([0, countriesChartParent.clientWidth - 100])
+                .padding([0.2])
 
-        countriesChartsvg
-            .append("g")
-            .attr("color", "white")
-            .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
-            .call(d3.axisBottom(x).tickSizeOuter(0));
+            countriesChartsvg
+                .append("g")
+                .attr("color", "white")
+                .attr("transform", `translate(0, ${countriesChartParent.clientHeight - 40})`)
+                .call(d3.axisBottom(x).tickSizeOuter(0));
 
 
-        var color = d3.scaleOrdinal()
-            .domain(Object.keys(countriesData["2009"]))
-            .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#B5E2FA'])
+            var color = d3.scaleOrdinal()
+                .domain(Object.keys(countriesData["2009"]))
+                .range(['#264653', '#2A9D8F', '#E9C46A', '#F4A261', '#E76F51', '#4daf4a', '#e41a1c', '#377eb8', '#B5E2FA'])
 
-        var arr = [];
+            var arr = [];
 
-        for (var year in countriesData) {
+            for (var year in countriesData) {
 
-            // only add allowed years meaning < selectedCurrent
+                // only add allowed years meaning < selectedCurrent
 
-            var temp = countriesData[year];
-            temp['year'] = year;
-            arr.push(temp);
-        }
+                var temp = countriesData[year];
+                temp['year'] = year;
+                arr.push(temp);
+            }
 
-        //stack the data? --> stack per subgroup
-        const stack = d3.stack()
-            .keys(Object.keys(countriesData["2009"]))
-            (arr)
-        //.value((obj, key) => {console.log(obj); console.log(key); return obj[key] });
+            //stack the data? --> stack per subgroup
+            const stack = d3.stack()
+                .keys(Object.keys(countriesData["2009"]))
+                (arr)
+            //.value((obj, key) => {console.log(obj); console.log(key); return obj[key] });
 
-        // Show the bars
-        countriesChartsvg.append("g")
-            .selectAll("g")
-            // Enter in the stack data = loop key per key = group per group
-            .data(stack)
-            .join("g")
-            .attr("fill", function (d) { return color(d.key) })
-            .selectAll("rect")
-            // enter a second time = loop subgroup per subgroup to add all rectangles
-            .data(d => d)
-            .join("rect")
-            .attr("class", d => { return "year" + d.data.year })
-            .attr("x", d => { return x(d.data.year) })
-            .attr("y", d => y(d[1]))
-            .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0 })
-            .attr("width", x.bandwidth())
+            // Show the bars
+            countriesChartsvg.append("g")
+                .selectAll("g")
+                // Enter in the stack data = loop key per key = group per group
+                .data(stack)
+                .join("g")
+                .attr("fill", function (d) { return color(d.key) })
+                .selectAll("rect")
+                // enter a second time = loop subgroup per subgroup to add all rectangles
+                .data(d => d)
+                .join("rect")
+                .attr("class", d => { return "year" + d.data.year })
+                .attr("x", d => { return x(d.data.year) })
+                .attr("y", d => y(d[1]))
+                .attr("height", d => { return (parseInt(currentDate.year()) >= parseInt(d.data.year)) ? (y(d[0]) - y(d[1])) : 0 })
+                .attr("width", x.bandwidth())
 
-    });
+        });
 
 
         function updateDeathsperYear(monthChange) {
@@ -494,9 +509,9 @@
 
             var oldDate = moment(currentDate);
 
-            var newDate = moment(currentDate) 
+            var newDate = moment(currentDate)
             newDate.add(monthChange, 'months');
-            
+
             if (parseInt(newDate.format("YYYY")) < 2009) {
                 currentDate = moment("2009")
                 return;
@@ -549,7 +564,7 @@
 
                     if (startMovingDate.diff(currentDate, 'months') == 0) {
                         elem.attr("style", "font-weight:bold; text-decoration: underline;")
-                        .attr("font-size", 25)
+                            .attr("font-size", 25)
                     } else {
                         elem.attr("style", "")
                     }
@@ -604,7 +619,7 @@
 
                     if (startMovingDate.diff(currentDate, 'months') == 0) {
                         elem.attr("style", "font-weight:bold; text-decoration: underline;")
-                        .attr("font-size", 25)
+                            .attr("font-size", 25)
                     } else {
                         elem.attr("style", "")
                     }
@@ -728,7 +743,7 @@
 
                 // create all trajectories
                 createTrajectory("Black_Sea", "0")
-                // createTrajectory("Central_African_Routes", "0") DOESN'T EXIST ANYMORE
+                createTrajectory("Central_African_Routes", "0") 
                 // createTrajectory("Central_African_Routes", "1") DOESN'T EXIST ANYMORE
                 createTrajectory("Central_African_Routes", "2")
                 // createTrajectory("Central_African_Routes", "3") DOESN'T EXIST ANYMORE
@@ -749,7 +764,7 @@
                 createTrajectory("Tuni_Medi", "0")
                 createTrajectory("ME_Africa", "0")
                 createTrajectory("East_Africa", "0")
-                createTrajectory("East_Africa", "1")
+                // createTrajectory("East_Africa", "1") DOESN't EXIST ANYMORE
                 createTrajectory("Turkey", "0")
                 createTrajectory("Turkey", "1")
                 createTrajectory("Egypt_Medi", "0")

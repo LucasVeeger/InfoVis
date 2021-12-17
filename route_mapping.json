@@ -45,7 +45,7 @@
         "East_Asia":1
     },
     "Western Mediterranean Route": {
-        "Spain":2,
+        "Spain":2.5,
         "Central_African_Routes":1,
         "West_African":1
     }

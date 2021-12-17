@@ -687,7 +687,7 @@
 
         // data paths
         let geoJsonUrl_worldmap = "https://raw.githubusercontent.com/quintene/data_vis_data/main/map_geo_data.json"
-        let geoJsonUrl_migrantroutes = "https://raw.githubusercontent.com/quintene/data_vis_data/main/migration_routes.geojson"
+        let geoJsonUrl_migrantroutes = "migration_routes(2).geojson"
         let path_IBCs_data = "https://raw.githubusercontent.com/quintene/data_vis_data/main/monthly_detections_of_IBCs.json"
         let path_route_mapping = "route_mapping.json"
 
@@ -943,7 +943,9 @@
                 return scalingfactors[year][trajectory_x.getAttribute("id")] = 0
             } else {
                 // return scalingfactors[year][trajectory_x.getAttribute("id")] = Math.log(sum_IBCs)/Math.log(2) / dampingfactor
-                return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / 1500000 - 3) / dampingfactor) + 3
+                // return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / 1500000 - 3) / dampingfactor) + 3
+                scalefactor = 200000
+                return scalingfactors[year][trajectory_x.getAttribute("id")] = ((sum_IBCs / scalefactor > 1.75) ? 1.75 : ((sum_IBCs / scalefactor < 0.1) ? 0.1 : sum_IBCs / scalefactor)) 
             }
         }
 

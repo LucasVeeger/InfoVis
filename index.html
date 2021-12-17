@@ -93,9 +93,9 @@
 
 <body>
     <div class="ml-64 fixed p-8">
-        <div class=" text-2xl text-white "> IN4089 Data Visualisation Project Group 11</div>
+        <div class=" text-2xl text-white"> IN4089 Data Visualisation Project Group 11</div>
 
-        <div class="text-xl text-white"> Lorem ipsum slaksdlksajldjasasd </div>
+        <div class="text-md text-white"> Lorem ipsum slaksdlksajldjasasd </div>
         
     
     </div>
@@ -178,6 +178,54 @@
 
         var currentDate = moment("2009");
 
+       var monthdescription = {
+    "201508": [
+        "On August 28, Austrian authorities",
+        "found the bodies of 71 migrants in",
+        "a cooling truck abandoned near the",
+        "Austrian border with Hungary."
+    ],
+    "201612": [
+        "This year alone, over 5.2 million",
+        "refugees and migrants reached",
+        "European shores."
+    ],
+    "201809": [
+        "In 2018, more than 138,000 people ",
+        "risked their lives trying to reach",
+        "Europe by sea; more than 2,000 of ",
+        "them drowned."
+    ],
+    "201909": [
+        "In 2019 alone, there have already ",
+        "been 27,301 sea arrivals in Italy,",
+        "Greece, Spain, Cyprus and Malta."
+    ],
+    "201911": [
+        "40% of refugee arriving by sea ",
+        "this year are women and children."
+    ],
+    "202002": [
+        "Increase of disorder in the West",
+        "and Central Africa region in 2020,",
+        "great increases in sea departures ",
+        "from Libya, Tunisia and Algeria."
+    ],
+    "202008": [
+        "23,023 migrant arrivals on the ",
+        "Canary Islands in 2020."
+    ],
+    "202011": [
+        "55,000 refugees from Ethiopia",
+        "fled to Sudan in Nov and Dec 2020",
+        "due to clashes in Tigray region."
+    ],
+    "202104": [
+        "Iternational military forces leave",
+        "Afghanistan, Taliban takes control ",
+        "of the country."
+    ]
+}
 
         // YEAR SLIDER ******** 
         var yearSliderParent = document.getElementById("yearSliderHolder");
@@ -238,38 +286,18 @@
                     year_text.attr("style", "font-weight:bold;text-decoration:underline").attr("font-size","25")
                 }
 
-                var year_text = svg.append("text")
-                .attr("id", "dt" + startDate.format('YYYYMM'))
-                .attr("x", barX + barW + circleR + 10)
-                .attr("y", (barHeight / 13) * i - textOffset + 20)
-                .attr("font-size", 15)
-                .attr("style", "white-space:pre-wrap;width:100px; font-size: 10px;")
-                .attr("fill", "white")
-                .text("1234567890123456789012345678901234567890 \ <br>jahjdga asasdasdasd dhja");
-            svg.append("text")
-                .attr("id", "dt2" + startDate.format('YYYYMM'))
-                .attr("x", barX + barW + circleR + 10)
-                .attr("y", (barHeight / 13) * i - textOffset + 20 + 15)
-                .attr("font-size", 15)
-                .attr("style", "white-space:pre-wrap")
-                .attr("fill", "white")
-                .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja")
-                ; 
+                console.log(monthdescription)
                 
-                /*
-                var test = svg.append("foreignObject")
-                .attr("id", "dt" + startDate.format('YYYYMM'))
-                .attr("x", barX + barW + circleR + 10)
-                .attr("y", (barHeight / 13) * i - textOffset + 20)
-                .attr("width", 150)
-                .attr("height", 30)
-
-            test.append("div")
-                .attr("width", 150)
-                .attr("height", 30)
-                .attr("xmlns","http://www.w3.org/1999/xhtml")
-                .text("asjksa;jkdkasjasd asd assd das a");   */
-            startDate.add(1, 'months');
+                
+                if (monthdescription[parseInt(startDate.format('YYYYMM'))]) {
+                    var test = svg.append("text")
+                    .attr("id", "dt" + startDate.format('YYYYMM'))
+                    .attr("x", barX + barW + circleR + 10)
+                    .attr("y", (barHeight / 13) * i - textOffset + 20)
+                    .attr("font-size", 8)
+                    .text(monthdescription[startDate.format('YYYYMM')][0])
+                }
+                startDate.add(1,"month")
         }
 
 
@@ -530,6 +558,25 @@
                         .attr("fill", "white")
                         .attr("class", "activeDate")
                         .text(text);
+                    
+   
+                    if (monthdescription[parseInt(oldDate.format('YYYYMM'))]) {
+
+                        var difference = 20;
+                        for (var text2 in monthdescription[parseInt(oldDate.format('YYYYMM'))]) {
+
+                            console.log(monthdescription[parseInt(oldDate.format('YYYYMM'))][text2])
+                            svg.append("text")
+                            .attr("class", "dt" + oldDate.format('YYYYMM'))
+                            .attr("x", barX + barW + circleR + 10)
+                            .attr("y", (barHeight + (barHeight / 13) * i) - textOffset + difference)
+                            .attr("font-size", 10)
+                            .attr("fill", "white")
+                            .text(monthdescription[parseInt(oldDate.format('YYYYMM'))][text2])
+
+                            difference += 10
+                        }
+                    }
 
                 }
                 // animate and mobve dates
@@ -542,8 +589,21 @@
 
 
                     var elem = d3.select("#d" + startMovingDate.format('YYYYMM'));
-                    elem
-                        .attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
+                    elem.attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
+
+                    var elemsub = d3.selectAll(".dt" + startMovingDate.format('YYYYMM'));
+
+                    if (!elemsub.empty()) {
+
+                        console.log("YUpdate position")
+                        elemsub.each(function(d, i) {   
+
+                         d3.select(this).attr("y", d3.select(this).attr("y") - (barHeight / 13) * monthChange);
+
+                        });
+                    }
+
+
 
                     //.duration(500)
 
@@ -568,6 +628,7 @@
                 for (var i = 0; i < monthChange; i++) {
                     outrangeDate.subtract(1, 'months');
                     d3.select("#d" + outrangeDate.format('YYYYMM')).remove();
+                    d3.selectAll(".dt" + outrangeDate.format('YYYYMM')).remove();
                 }
             }
 
@@ -590,6 +651,24 @@
                         .attr("fill", "white")
                         .attr("class", "activeDate")
                         .text(text);
+
+                        if (monthdescription[parseInt(oldDate.format('YYYYMM'))]) {
+
+                    var difference = 20;
+                    for (var text2 in monthdescription[parseInt(oldDate.format('YYYYMM'))]) {
+
+                        console.log(monthdescription[parseInt(oldDate.format('YYYYMM'))][text2])
+                        svg.append("text")
+                        .attr("class", "dt" + oldDate.format('YYYYMM'))
+                        .attr("x", barX + barW + circleR + 10)
+                        .attr("y",(-1 * (barHeight / 13) * i) - textOffset + difference)
+                        .attr("font-size", 10)
+                        .attr("fill", "white")
+                        .text(monthdescription[parseInt(oldDate.format('YYYYMM'))][text2])
+
+                        difference += 10
+                    }
+                    }                        
                 }
                 // animate and mobve dates
 
@@ -602,13 +681,25 @@
                     elem
                         .attr("y", elem.attr("y") - (barHeight / 13) * monthChange)
 
+                        var elemsub = d3.selectAll(".dt" + startMovingDate.format('YYYYMM'));
+
+                        if (!elemsub.empty()) {
+
+                            console.log("YUpdate position naar beneden")
+                            elemsub.each(function(d, i) {   
+
+                                d3.select(this).attr("y", d3.select(this).attr("y") - (barHeight / 13) * monthChange)
+
+                            });
+                        }                        
+
                     if (startMovingDate.diff(currentDate, 'months') == 0) {
                         elem.attr("style", "font-weight:bold; text-decoration: underline;")
                         .attr("font-size", 25)
                     } else {
                         elem.attr("style", "")
                     }
-                    startMovingDate.add(1, 'months');
+                    startMovingDate.add(1, 'month');
                 }
 
                 var outrangeDate = moment(currentDate);
@@ -619,6 +710,7 @@
                 for (var i = 0; i < monthChange * -1; i++) {
                     outrangeDate.add(1, 'months');
                     d3.select("#d" + outrangeDate.format('YYYYMM')).remove();
+                    d3.selectAll(".dt" + outrangeDate.format('YYYYMM')).remove();
                 }
 
             }

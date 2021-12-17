@@ -184,6 +184,31 @@
                 .attr("font-size", textSize)
                 .attr("fill", "white")
                 .text(text);
+
+            /*
+                var year_text = svg.append("text")
+                .attr("id", "dt" + startDate.format('YYYYMM'))
+                .attr("x", barX + barW + circleR + 10)
+                .attr("y", (barHeight / 13) * i - textOffset + 20)
+                .attr("font-size", 15)
+                .attr("style", "white-space:pre-wrap")
+                .attr("fill", "white")
+                .text("asjksa;jkdkasjasd <br> \njhasddashjgsdahgdh \ <br>jahjdga asasdasdasd dhja");    
+                */
+                
+                var test = svg.append("foreignObject")
+                .attr("id", "dt" + startDate.format('YYYYMM'))
+                .attr("x", barX + barW + circleR + 10)
+                .attr("y", (barHeight / 13) * i - textOffset + 20)
+                .attr("width", 150)
+                .attr("height", 30)
+
+                test.append("div")
+                .attr("width", 150)
+                .attr("height", 30)
+
+                .attr("xmlns","http://www.w3.org/1999/xhtml")
+                .text("asjksa;jkdkasjasd asd assd das a");   
             startDate.add(1, 'months');
         }
 

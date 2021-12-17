@@ -1,43 +1,43 @@
 {
     "Black Sea Route": {
-        "Black_Sea":1,
-        "East_Asia":1
+        "Black_Sea":3,
+        "East_Asia":2
 
     },
     "Central Mediterranean Route": {
         "Syria_Africa":1,
-        "Central_African_Routes":1,
+        "Central_African_Routes":1.5,
         "West_African":1,
-        "Tuni_Medi":1,
+        "Tuni_Medi":2,
         "East_Africa":1,
-        "Egypt_Medi":1,
+        "Egypt_Medi":2,
         "East_Asia":0.5,
-        "Libya_Medi":1,
-        "Turkey_Medi":0.5,
-        "Italy":7              
+        "Libya_Medi":2,
+        "Turkey_Medi":1,
+        "Italy":3             
     },
     "Eastern Borders Route": {
         "East_Asia":1,
-        "Russia":1,
+        "Russia":0.5,
         "Easter_Europe":1,
-        "Norway":1
+        "Norway":0.5
     },
     "Eastern Mediterranean Route": {
-        "ME_Africa":1,
+        "ME_Africa":1.5,
         "Syria_Africa":1,
         "East_Africa":1,
         "Turkey":1,
         "Egypt_Medi":1,
         "East_Asia":1,
-        "Greece_Italy":0.5
+        "Greece_Italy":1
     },
     "Other": {
-        "Russia":1,
-        "Norway":0.1
+        "Russia":0.2,
+        "Norway":0.2
     },
     "Western African Route": {
         "Central_African_Routes":1,
-        "West_African":1
+        "West_African":2
     },
     "Western Balkan Route": {
         "Turkey":1,
@@ -45,8 +45,9 @@
         "East_Asia":1
     },
     "Western Mediterranean Route": {
-        "Spain":1,
-        "Central_African_Routes":1
+        "Spain":8,
+        "Central_African_Routes":2.5,
+        "West_African":4
     }
 }
 

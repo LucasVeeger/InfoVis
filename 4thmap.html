@@ -46,7 +46,7 @@
         .arrowelement {
             fill: #1500d3;
             stroke: none;
-        } 
+        }
 
         #border {
             fill: #ffffff;
@@ -82,12 +82,19 @@
 <body>
     <svg id="main">
         <!-- TODO: can this be removed? -->
-        <path id="route" d="" />
+        <defs>
+            <marker id="arrow" markerWidth="100" markerHeight="100" refX="0" refY="3" orient="auto"
+                markerUnits="strokeWidth" viewbox="0 0 10 10">
+                <path d="M0,0 L0,6 L9,3 z" fill="#f00" />
+            </marker>
+            <path id = arrowline d="M10 10" markerEnd="url(#arrow)"/>
+        </defs>
+        <polyline fill="none" stroke="black" points="20,100 40,60 70,80 100,200" marker-end="url(#arrow)" />
+        <use href="#arrowline" transform="translate(1177.92529296875,625.0386962890625) rotate( -157.9714849892128)"></use>
     </svg>
 
     <div id="container">
         <h1>World map centered on European countries</h1>
-
     </div>
     <script>
         // set up the svg element to draw in using D3
@@ -148,7 +155,8 @@
                     .append("use")
                     .attr("href", "#arrowhead")
                     .attr("route_name", ref)
-                    .attr("class", ref);
+                    .attr("class", ref)
+                    .attr("transform", "scale(10)");
             }
 
             if (!Array.prototype.last) {
@@ -162,8 +170,8 @@
                 route_id = "#" + route_name + "_" + route_index
                 trajectories.push(document.querySelector(route_id))
                 totalLengths.push(trajectories.last().getTotalLength())
-                groups.push(totalLengths.last() / 10)
-                arrowgroups.push(addArrows(d3.range(10).map(function (d) { return d * groups.last() + 50; }), route_name))
+                groups.push(totalLengths.last() / 3)
+                arrowgroups.push(addArrows(d3.range(3).map(function (d) { return d * groups.last() + 50; }), route_name))
                 trajectories.last().style.strokeDasharray = "50," + (groups.last() - 50);
 
             }
@@ -203,9 +211,13 @@
         })
 
         svg1.append("defs")
-            .append("path")
+            .append("polygon")
             .attr("id", "arrowhead")
-            .attr("d", "M7,0 L-7,-5 L-7,5 Z")
+            .attr("points", "23.4,18.8 30,15 23.4,11.2 16.7,7.3 16.7,13 0,13 0,17 16.7,17 16.7,22.7")
+            .attr("orient", "auto")
+            .attr("refX", "10")
+            .attr("refY", "10")
+            
 
         // svg1.append("defs")
         //     .append("marker")
@@ -223,7 +235,7 @@
         //     .append("path")
         //     .attr("id", "arrowhead")
         //     .attr("d", "M16.7, 178 c87.6 - 46.9, 162.9 - 185.4, 227 - 136.4C307.2, 90.1, 195, 158.5, 111, 108.9C71, 85.2, 92.2, 30.7, 126, 7")
-            
+
         var start;
 
         const trajectories = [],
@@ -249,7 +261,7 @@
                 }
 
                 var p = pointAtLength(l, trajectory_x);
-                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x) + ")";
+                return "translate(" + p + ") rotate( " + angleAtLength(l, trajectory_x) + ") scale(0.5)";
             });
         }
 
